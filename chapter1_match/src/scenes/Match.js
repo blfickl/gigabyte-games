@@ -158,29 +158,40 @@ this.input.on("drop", (pointer, gameObject, dropTarget) => {
     if (this.popupIcon) this.popupIcon.destroy();
     // If final, show golden message at top with sparkles, not in popup
     if (isFinal) {
-      const congratsText = this.add.text(30, 30, "All matched! Well done!", {
+      // Blue message text at the top
+      const topMargin = 24;
+      const congratsText = this.add.text(30, topMargin, "All matched! Well done!", {
         font: "18px Arial",
-        color: "#ffd700",
+        color: "#1976d2",
         fontStyle: "bold",
-        align: "left",
-        stroke: "#fff",
-        strokeThickness: 2
-      }).setOrigin(0, 0).setDepth(20);
-      // Sparkles
-      for (let i = 0; i < 10; i++) {
-        const angle = (i / 10) * Math.PI * 2;
-        const x = 110 + Math.cos(angle) * 30;
-        const y = 38 + Math.sin(angle) * 12;
-        const sparkle = this.add.star(x, y, 5, 3, 7, 0xfff700).setDepth(21);
+        align: "left"
+      }).setOrigin(0, 0).setDepth(1000);
+
+      // Add sparkles effect (blue, above all, at top)
+      const sparkleCount = 16;
+      const sparkleRadius = 60;
+      const baseX = 30 + congratsText.width / 2;
+      const baseY = topMargin + congratsText.height / 2;
+      for (let i = 0; i < sparkleCount; i++) {
+        const angle = (2 * Math.PI * i) / sparkleCount;
+        const sx = baseX + Math.cos(angle) * sparkleRadius;
+        const sy = baseY + Math.sin(angle) * sparkleRadius;
+        const sparkle = this.add.star(sx, sy, 5, 2, 6, 0x1976d2, 1).setDepth(1000);
+        sparkle.setAlpha(0.7);
+        sparkle.setScale(0.7 + Math.random() * 0.5);
+        // Animate sparkle alpha for twinkle effect
         this.tweens.add({
           targets: sparkle,
-          alpha: { from: 1, to: 0 },
-          scale: { from: 1, to: 2 },
-          duration: 900,
-          delay: i * 40,
-          onComplete: () => sparkle.destroy()
+          alpha: { from: 0.7, to: 0.2 + Math.random() * 0.5 },
+          duration: 600 + Math.random() * 800,
+          yoyo: true,
+          repeat: -1,
+          delay: Math.random() * 400
         });
+        // Remove sparkles with the text
+        this.time.delayedCall(1800, () => sparkle.destroy());
       }
+
       this.time.delayedCall(1800, () => {
         congratsText.destroy();
         this.scene.restart();
