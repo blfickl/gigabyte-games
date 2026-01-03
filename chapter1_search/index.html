@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phaser Word Search Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+    <style>
+        body { margin: 0; background: #222; color: #fff; font-family: sans-serif; }
+        #game-container { margin: 20px auto; display: block; width: 420px; }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Simple Word Search</h2>
+    <div id="game-container"></div>
+    <script>
+        const words = ["GIGABYTE", "TOPLINE", "CONNECTION", "HILLS", "TROT"];
+        const gridSize = 10;
+        let grid = [];
+
+        function makeEmptyGrid(size) {
+            return Array.from({length: size}, () => Array(size).fill(''));
+        }
+
+        function fillGridRandom(grid) {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let y = 0; y < grid.length; y++) {
+                for (let x = 0; x < grid[y].length; x++) {
+                    if (!grid[y][x]) {
+                        grid[y][x] = letters[Math.floor(Math.random() * letters.length)];
+                    }
+                }
+            }
+        }
+
+        function placeWord(grid, word) {
+            // Try to place horizontally, vertically, or diagonally
+            const directions = [
+                {dx: 1, dy: 0}, // right
+                {dx: 0, dy: 1}, // down
+                {dx: 1, dy: 1}  // diagonal
+            ];
+            for (let tries = 0; tries < 100; tries++) {
+                const dir = directions[Math.floor(Math.random() * directions.length)];
+                const x = Math.floor(Math.random() * (gridSize - (dir.dx ? word.length : 0)));
+                const y = Math.floor(Math.random() * (gridSize - (dir.dy ? word.length : 0)));
+                let fits = true;
+                for (let i = 0; i < word.length; i++) {
+                    const nx = x + dir.dx * i;
+                    const ny = y + dir.dy * i;
+                    if (grid[ny][nx] && grid[ny][nx] !== word[i]) {
+                        fits = false;
+                        break;
+                    }
+                }
+                if (fits) {
+                    for (let i = 0; i < word.length; i++) {
+                        const nx = x + dir.dx * i;
+                        const ny = y + dir.dy * i;
+                        grid[ny][nx] = word[i];
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function makeWordSearch(words, size) {
+            let grid = makeEmptyGrid(size);
+            for (let word of words) {
+                placeWord(grid, word);
+            }
+            fillGridRandom(grid);
+            return grid;
+        }
+
+        grid = makeWordSearch(words, gridSize);
+
+        const config = {
+            type: Phaser.AUTO,
+            width: 420,
+            height: 420,
+            backgroundColor: '#333',
+            parent: 'game-container',
+            scene: {
+                create: create
+            }
+        };
+
+        let selected = [];
+        let foundWords = [];
+
+        function create() {
+            const scene = this;
+            const cellSize = 40;
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    let cell = scene.add.text(20 + x * cellSize, 20 + y * cellSize, grid[y][x], {
+                        font: '28px monospace',
+                        color: '#fff',
+                        backgroundColor: '#444',
+                        padding: {x: 8, y: 4}
+                    })
+                    .setInteractive()
+                    .on('pointerdown', function () {
+                        if (!selected.some(s => s.x === x && s.y === y)) {
+                            cell.setStyle({backgroundColor: '#0a0'});
+                            selected.push({x, y, cell});
+                            checkSelection();
+                        }
+                    });
+                }
+            }
+            // Show word list
+            scene.add.text(20, 420 - 40, 'Words: ' + words.join(', '), { font: '18px monospace', color: '#ff0' });
+        }
+
+        function checkSelection() {
+            if (selected.length < 3) return;
+            let str = selected.map(s => grid[s.y][s.x]).join('');
+            let found = words.find(w => w === str);
+            if (found && !foundWords.includes(found)) {
+                foundWords.push(found);
+                selected.forEach(s => s.cell.setStyle({backgroundColor: '#00f'}));
+                selected = [];
+                if (foundWords.length === words.length) {
+                    alert('Congratulations! You found all the words!');
+                }
+            } else if (str.length > Math.max(...words.map(w => w.length))) {
+                selected.forEach(s => s.cell.setStyle({backgroundColor: '#444'}));
+                selected = [];
+            }
+        }
+
+        new Phaser.Game(config);
+    </script>
+</body>
+</html>
