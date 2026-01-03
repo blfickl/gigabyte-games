@@ -9,19 +9,30 @@ class Spelling extends Phaser.Scene {
             // Placeholder for image
             const imgBox = this.add.rectangle(this.scale.width/2, popupY - 60, 120, 80, 0xf0f0f0, 1).setStrokeStyle(2, 0xcccccc);
             const imgText = this.add.text(this.scale.width/2, popupY - 60, 'Image\nPlaceholder', { font: '16px Arial', color: '#888', align: 'center' }).setOrigin(0.5);
-            // Answer text
+            // Muscle name in bold at top
+            const wordText = this.add.text(this.scale.width/2, popupY - 30, muscle.name, { font: 'bold 22px Arial', color: '#111', align: 'center' }).setOrigin(0.5);
+            // Answer text (educational prompt)
             const answerText = this.add.text(this.scale.width/2, popupY, muscle.answer, { font: '18px Arial', color: '#222', wordWrap: { width: popupWidth - 40 }, align: 'center' }).setOrigin(0.5);
             // Pronunciation text (if available)
             let pronTextObj = null;
             if (muscle.pronunciations && muscle.pronunciations.length > 0) {
                 pronTextObj = this.add.text(this.scale.width/2, popupY + 50, 'Pronunciation: ' + muscle.pronunciations.join(', '), { font: '16px Arial', color: '#00796b', align: 'center', wordWrap: { width: popupWidth - 40 } }).setOrigin(0.5);
             }
-            // Dismiss button (no 'Next' text)
-            const btn = this.add.rectangle(this.scale.width/2, popupY + 100, 100, 36, 0x00796b, 1).setInteractive();
-            btn.on('pointerdown', () => {
-                popupBg.destroy(); imgBox.destroy(); imgText.destroy(); answerText.destroy(); btn.destroy();
+            // Dismiss 'X' button in top right of popup
+        const closeBtn = this.add.text(this.scale.width/2 + popupWidth/2 - 20, popupY - 90, '✕', { font: '28px Arial', color: '#c62828', backgroundColor: '#fff' })
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(1000);
+        closeBtn.on('pointerup', () => {
+                // Only close popup, do not advance word
+                popupBg.destroy();
+                imgBox.destroy();
+                imgText.destroy();
+                wordText.destroy();
+                answerText.destroy();
+                closeBtn.destroy();
                 if (pronTextObj) pronTextObj.destroy();
-            });
+        });
             }
         showEndPopup() {
             // Educational bullets
@@ -92,7 +103,7 @@ class Spelling extends Phaser.Scene {
 
         this.add.text(this.scale.width/2, 40, 'Muscle Spelling Game', { font: '28px Arial', color: '#222' }).setOrigin(0.5);
         // Show the answer word in red for testing
-      //  this.answerText = this.add.text(this.scale.width/2, 90, this.muscles[this.current].name, { font: 'bold 28px Arial', color: '#c62828' }).setOrigin(0.5);
+        // Removed answerText display for production
         this.wordText = this.add.text(this.scale.width/2, 130, this.getMaskedWord(), { font: '32px Arial', color: '#005' }).setOrigin(0.5);
        this.guessedText = this.add.text(this.scale.width/2, 295, '', { font: '20px Arial', color: '#333', wordWrap: { width: Math.min(440, this.scale.width-40) } }).setOrigin(0.5);
         this.promptText = this.add.text(this.scale.width/2, 180, this.muscles[this.current].prompt, { font: '20px Arial', color: '#333', wordWrap: { width: this.scale.width - 40 } }).setOrigin(0.5);
@@ -185,7 +196,7 @@ class Spelling extends Phaser.Scene {
         this.guessedLetters = [];
         this.errors = 0;
         if (this.current < this.muscles.length) {
-            this.answerText.setText(this.muscles[this.current].name);
+            // Removed answerText update for production
             this.wordText.setText(this.getMaskedWord());
             this.promptText.setText(this.muscles[this.current].prompt);
             this.inputDisplay.setText('Type a letter');
@@ -193,7 +204,7 @@ class Spelling extends Phaser.Scene {
             this.guessedText.setText('');
             this.stickHorseText.setText('Errors: 0 / ' + this.maxErrors);
         } else {
-            this.answerText.setText('');
+            // Removed answerText clear for production
             this.wordText.setText('');
             this.promptText.setText('All done! Score: ' + this.score + '/' + this.muscles.length);
             this.inputDisplay.setText('');
