@@ -14,8 +14,8 @@
     <h2 style="text-align:center;">Simple Word Search</h2>
     <div id="game-container"></div>
     <script>
-        const words = ["GIGABYTE", "TOPLINE", "CONNECTION", "HILLS", "TROT", "PRESENCE", "POCAHONTAS", "BACK"];
-        const gridSize = 12;
+        const words = ["GIGABYTE", "TOPLINE", "CONNECTION", "HILLS", "TROT", "BACK"];
+        const gridSize = 10;
         let grid = [];
 
         function makeEmptyGrid(size) {
@@ -120,8 +120,14 @@
                     });
                 }
             }
-            // Show word list below the grid
-            scene.add.text(20, 20 + gridSize * cellSize + 20, 'Words: ' + words.join(', '), { font: '22px monospace', color: '#ff0' });
+            // Show word list below the grid in two columns, three rows
+            const wordsPerRow = Math.ceil(words.length / 3);
+            for (let row = 0; row < 3; row++) {
+                const startIdx = row * wordsPerRow;
+                const endIdx = Math.min(startIdx + wordsPerRow, words.length);
+                const rowWords = words.slice(startIdx, endIdx).join(', ');
+                scene.add.text(20 + (row % 2) * 260, 20 + gridSize * cellSize + 20 + row * 32, rowWords, { font: '20px monospace', color: '#ff0' });
+            }
         }
 
         function checkSelection() {
