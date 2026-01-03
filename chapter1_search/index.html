@@ -14,8 +14,8 @@
     <h2 style="text-align:center;">Simple Word Search</h2>
     <div id="game-container"></div>
     <script>
-        const words = ["GIGABYTE", "TOPLINE", "CONNECTION", "HILLS", "TROT"];
-        const gridSize = 10;
+        const words = ["GIGABYTE", "TOPLINE", "CONNECTION", "HILLS", "TROT", "PRESENCE", "POCAHONTAS", "BACK"];
+        const gridSize = 12;
         let grid = [];
 
         function makeEmptyGrid(size) {
@@ -66,10 +66,19 @@
         }
 
         function makeWordSearch(words, size) {
-            let grid = makeEmptyGrid(size);
-            for (let word of words) {
-                placeWord(grid, word);
-            }
+            let grid;
+            let placed;
+            let attempts = 0;
+            do {
+                grid = makeEmptyGrid(size);
+                placed = 0;
+                for (let word of words) {
+                    if (placeWord(grid, word)) {
+                        placed++;
+                    }
+                }
+                attempts++;
+            } while (placed < words.length && attempts < 10);
             fillGridRandom(grid);
             return grid;
         }
@@ -78,8 +87,8 @@
 
         const config = {
             type: Phaser.AUTO,
-            width: 420,
-            height: 420,
+            width: 600,
+            height: 600,
             backgroundColor: '#333',
             parent: 'game-container',
             scene: {
@@ -111,8 +120,8 @@
                     });
                 }
             }
-            // Show word list
-            scene.add.text(20, 420 - 40, 'Words: ' + words.join(', '), { font: '18px monospace', color: '#ff0' });
+            // Show word list below the grid
+            scene.add.text(20, 20 + gridSize * cellSize + 20, 'Words: ' + words.join(', '), { font: '22px monospace', color: '#ff0' });
         }
 
         function checkSelection() {
