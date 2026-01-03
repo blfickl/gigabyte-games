@@ -46,7 +46,7 @@ class MazeScene extends Phaser.Scene {
     // Place pickups at fixed open cells (not start)
     this.pickups = [];
     const pickupCells = [
-      { row: 0, col: 2, type: 'protein' },
+      { row: 1, col: 2, type: 'protein' }, // moved from (0,2) to (1,2)
       { row: 2, col: 0, type: 'balancer' },
       { row: 4, col: 3, type: 'energy' },
       { row: 5, col: 5, type: 'supplement' },
@@ -61,13 +61,27 @@ class MazeScene extends Phaser.Scene {
       pickup.setData('col', cell.col);
       pickup.setData('type', cell.type);
       this.pickups.push(pickup);
+      // Add color-coded label under each pickup
+      let label = '';
+      if (cell.type === 'protein') label = 'Protein';
+      else if (cell.type === 'balancer') label = 'Balancer';
+      else if (cell.type === 'energy') label = 'Energy';
+      else if (cell.type === 'supplement') label = 'Supplement';
+      else if (cell.type === 'slowfeeder') label = 'Slow Feeder';
+      this.add.text(px, py + this.cellSize*0.24, label, {
+        font: '15px Arial',
+        color: Phaser.Display.Color.IntegerToColor(typeObj.color).rgba,
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: this.cellSize*1.5 }
+      }).setOrigin(0.5, 0).setDepth(20);
     }
 
     // Place hazards at fixed open cells (not start or pickup cells)
     this.hazards = [];
     // Three types: fat token (circle), over-supplement (triangle), underfeeding zone (square)
     const hazardCells = [
-      { row: 1, col: 2, type: 'fat' },
+      { row: 0, col: 2, type: 'fat' }, // moved from (1,2) to (0,2)
       { row: 2, col: 4, type: 'over' },
       { row: 4, col: 0, type: 'under' }
     ];
@@ -101,7 +115,7 @@ class MazeScene extends Phaser.Scene {
       if (cell.type === 'fat') label = 'Fat token';
       else if (cell.type === 'over') label = 'Over-supplement';
       else if (cell.type === 'under') label = 'Underfeeding zone';
-      this.add.text(px, py + this.cellSize*0.28, label, { font: '13px Arial', color: '#d32f2f', align: 'center', wordWrap: { width: this.cellSize*1.5 } }).setOrigin(0.5, 0).setDepth(20);
+      this.add.text(px, py + this.cellSize*0.28, label, { font: '15px Arial', color: '#d32f2f', align: 'center', wordWrap: { width: this.cellSize*1.5 } }).setOrigin(0.5, 0).setDepth(20);
     }
     this.maze = [
       [0, 1, 0, 0, 0, 1],
@@ -255,6 +269,16 @@ class MazeScene extends Phaser.Scene {
   showPopup(text) {
     if (this.popupActive) return;
     this.popupActive = true;
+    // Detect hazard popups by message content
+    const isHazard = text.toLowerCase().includes('hazard') || text.toLowerCase().includes('fat token') || text.toLowerCase().includes('over-supplement') || text.toLowerCase().includes('underfeeding');
+    // Set popup border and text color
+    if (isHazard) {
+      this.popupBg.setStrokeStyle(3, 0xd32f2f);
+      this.popupText.setColor('#d32f2f');
+    } else {
+      this.popupBg.setStrokeStyle(3, 0x1976d2);
+      this.popupText.setColor('#1976d2');
+    }
     this.popupBg.setVisible(true);
     this.popupText.setText(text).setVisible(true);
     // Dismiss on tap
