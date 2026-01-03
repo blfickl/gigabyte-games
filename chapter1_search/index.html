@@ -120,13 +120,21 @@
                     });
                 }
             }
-            // Show word list below the grid in two columns, three rows
-            const wordsPerRow = Math.ceil(words.length / 3);
-            for (let row = 0; row < 3; row++) {
+            // Show word list below the grid: two words per row, centered
+            const wordsPerRow = 2;
+            const totalRows = Math.ceil(words.length / wordsPerRow);
+            const gridWidthPx = gridSize * cellSize;
+            for (let row = 0; row < totalRows; row++) {
                 const startIdx = row * wordsPerRow;
                 const endIdx = Math.min(startIdx + wordsPerRow, words.length);
                 const rowWords = words.slice(startIdx, endIdx).join(', ');
-                scene.add.text(20 + (row % 2) * 260, 20 + gridSize * cellSize + 20 + row * 32, rowWords, { font: '20px monospace', color: '#ff0' });
+                // Center the text horizontally below the grid
+                scene.add.text(
+                    20 + (gridWidthPx / 2) - (rowWords.length * 10),
+                    20 + gridSize * cellSize + 20 + row * 32,
+                    rowWords,
+                    { font: '20px monospace', color: '#ff0' }
+                );
             }
         }
 
