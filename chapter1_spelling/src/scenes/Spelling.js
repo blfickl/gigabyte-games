@@ -57,6 +57,24 @@ class Spelling extends Phaser.Scene {
     }
 
     create() {
+                    // Mobile keyboard support
+                    const mobileInput = document.getElementById('mobile-input');
+                    if (mobileInput) {
+                        mobileInput.value = '';
+                        mobileInput.focus();
+                        // Forward input to guessing logic
+                        mobileInput.addEventListener('input', (e) => {
+                            const val = mobileInput.value;
+                            if (val.length > 0) {
+                                const char = val[val.length - 1];
+                                this.handleLetterGuess({ key: char });
+                                mobileInput.value = '';
+                            }
+                        });
+                        // Refocus on tap/click
+                        window.addEventListener('touchstart', () => mobileInput.focus());
+                        window.addEventListener('mousedown', () => mobileInput.focus());
+                    }
             // Debug text to show key events
         //    this.debugText = this.add.text(10, this.scale.height - 30, '', { font: '16px Arial', color: '#c62828' }).setOrigin(0, 1);
         this.muscles = [
