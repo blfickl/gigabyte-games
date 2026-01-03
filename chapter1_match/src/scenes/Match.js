@@ -69,13 +69,17 @@ class MatchScene extends Phaser.Scene {
 
     // Display Back Function targets (droppables)
     shuffledBacks.forEach((item, i) => {
-      const backText = this.add.text(180, 40 + i * 90, item.back, {
-        font: "13px Arial",
-        backgroundColor: "#fffbe0",
+      // Draw border for back function
+      const backBorder = this.add.graphics();
+      backBorder.lineStyle(2, 0x222288, 1);
+      backBorder.strokeRoundedRect(160, 50 + i * 90, 240, 48, 12);
+      // Add text
+      const backText = this.add.text(180, 52 + i * 90, item.back, {
+        font: "12px Arial",
+        backgroundColor: "rgba(0,0,0,0)",
         color: "#333",
-        wordWrap: { width: 180 },
-        padding: { x: 6, y: 4 },
-        borderRadius: 6
+        wordWrap: { width: 220 },
+        padding: { x: 2, y: 2 }
       })
         .setData("gait", item.gait)
         .setData("awareness", item.awareness)
