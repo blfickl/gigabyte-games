@@ -28,9 +28,8 @@ class Sort extends Phaser.Scene {
         this.dropZones = [];
         this.draggingCard = null;
         // Move cards higher and fit grid better vertically
-        const totalGridHeight = (this.cardHeight + this.cardMargin) * (this.sections.length + 1);
-        // Center grid vertically, but with less top padding
-        this.startY = Math.max(8, (this.scale.height - totalGridHeight) / 2);
+        // Always start grid near the top
+        this.startY = 8;
         this.startX = this.scale.width/2 - this.cardWidth/2;
 
         // Drop zones (target order: Cervical, Thoracic, Lumbar, Sacral, Coccygeal) + buffer
