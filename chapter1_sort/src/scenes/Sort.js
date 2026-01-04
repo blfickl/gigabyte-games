@@ -21,38 +21,43 @@ class Sort extends Phaser.Scene {
         Phaser.Utils.Array.Shuffle(this.sections);
 
         // Card layout
-        this.cardWidth = 260;
-        this.cardHeight = 70;
+        this.cardWidth = 340;
+        this.cardHeight = 54;
         this.cardMargin = 18;
+        // Add extra margin above the top card
         this.cards = [];
         this.dropZones = [];
         this.draggingCard = null;
         // Move cards higher and fit grid better vertically
         // Always start grid near the top
-        this.startY = 8;
+        this.startY = 40;
         this.startX = this.scale.width/2 - this.cardWidth/2;
 
         // Drop zones (target order: Cervical, Thoracic, Lumbar, Sacral, Coccygeal) + buffer
-        for (let i = 0; i < this.sections.length + 1; i++) {
-            let zoneY = this.startY + i * (this.cardHeight + this.cardMargin);
-            let color = i < this.sections.length ? 0xf0f0f0 : 0xf5f5f5;
-            let stroke = i < this.sections.length ? 0x00796b : 0xcccccc;
-            let zone = this.add.rectangle(this.startX + this.cardWidth/2, zoneY, this.cardWidth, this.cardHeight, color, 0.7).setStrokeStyle(2, stroke);
-            this.dropZones.push(zone);
-            if (i === this.sections.length) {
-                this.add.text(this.startX + this.cardWidth/2, zoneY, 'Buffer', { font: '18px Arial', color: '#888', align: 'center' }).setOrigin(0.5);
-            }
-        }
+      for (let i = 0; i < this.sections.length + 1; i++) {
+    let zoneY = this.startY + i * (this.cardHeight + this.cardMargin);
+    // Prevent drop zones from going below screen
+    if (zoneY + this.cardHeight/2 > this.scale.height - 12) zoneY = this.scale.height - this.cardHeight/2 - 12;
+    let color = i < this.sections.length ? 0xf0f0f0 : 0xf5f5f5;
+    let stroke = i < this.sections.length ? 0x00796b : 0xcccccc;
+    let zone = this.add.rectangle(this.startX + this.cardWidth/2, zoneY, this.cardWidth, this.cardHeight, color, 0.7).setStrokeStyle(2, stroke);
+    this.dropZones.push(zone);
+    if (i === this.sections.length) {
+        this.add.text(this.startX + this.cardWidth/2, zoneY, 'Buffer', { font: '18px Arial', color: '#888', align: 'center' }).setOrigin(0.5);
+    }
+}
 
         // Draggable cards
-        for (let i = 0; i < this.sections.length; i++) {
-            let cardY = this.startY + i * (this.cardHeight + this.cardMargin);
-            let card = this.add.rectangle(this.startX + this.cardWidth/2, cardY, this.cardWidth, this.cardHeight, 0xffffff, 1).setStrokeStyle(3, 0x388e3c).setInteractive({ draggable: true });
-            card.data = this.sections[i];
-            card.originalY = cardY;
-            card.textObj = this.add.text(card.x, card.y, `${this.sections[i].region}\n${this.sections[i].vertebrae} vertebrae\n${this.sections[i].function}`, { font: '16px Arial', color: '#222', align: 'center', wordWrap: { width: this.cardWidth - 20 } }).setOrigin(0.5);
-            this.cards.push(card);
-        }
+    for (let i = 0; i < this.sections.length; i++) {
+    let cardY = this.startY + i * (this.cardHeight + this.cardMargin);
+    // Prevent cards from going below screen
+    if (cardY + this.cardHeight/2 > this.scale.height - 12) cardY = this.scale.height - this.cardHeight/2 - 12;
+    let card = this.add.rectangle(this.startX + this.cardWidth/2, cardY, this.cardWidth, this.cardHeight, 0xffffff, 1).setStrokeStyle(3, 0x388e3c).setInteractive({ draggable: true });
+    card.data = this.sections[i];
+    card.originalY = cardY;
+    card.textObj = this.add.text(card.x, card.y, `${this.sections[i].region}\n${this.sections[i].vertebrae} vertebrae\n${this.sections[i].function}`, { font: '16px Arial', color: '#222', align: 'center', wordWrap: { width: this.cardWidth - 20 } }).setOrigin(0.5);
+    this.cards.push(card);
+}
 
         // Drag events
         this.input.setDraggable(this.cards);
