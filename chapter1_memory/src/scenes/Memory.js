@@ -15,10 +15,10 @@ class Memory extends Phaser.Scene {
         let cards = [...this.cardNames, ...this.cardNames];
         Phaser.Utils.Array.Shuffle(cards);
 
-        // Layout grid: 3 rows, 4 columns
-        this.cardWidth = 120;
-        this.cardHeight = 100;
-        this.cardMargin = 24;
+        // Layout grid: 3 rows, 4 columns (smaller for mobile)
+        this.cardWidth = 72;
+        this.cardHeight = 60;
+        this.cardMargin = 10;
         this.cols = 4;
         this.rows = 3;
         this.cards = [];
@@ -33,7 +33,8 @@ class Memory extends Phaser.Scene {
         let gridWidth = this.cols * this.cardWidth + (this.cols - 1) * this.cardMargin;
         let gridHeight = this.rows * this.cardHeight + (this.rows - 1) * this.cardMargin;
         let startX = this.scale.width/2 - gridWidth/2 + this.cardWidth/2;
-        let startY = this.scale.height/2 - gridHeight/2 + this.cardHeight/2;
+        // Move grid to top center (e.g., 40px from top)
+        let startY = 40 + this.cardHeight/2;
 
         // Create cards
         for (let i = 0; i < cards.length; i++) {
