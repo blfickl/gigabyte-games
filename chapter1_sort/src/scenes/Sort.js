@@ -27,13 +27,17 @@ class Sort extends Phaser.Scene {
         this.cards = [];
         this.dropZones = [];
         this.draggingCard = null;
-        // Move cards higher for mobile
-        this.startY = 24;
+        // Move cards higher and fit grid better vertically
+        const totalGridHeight = (this.cardHeight + this.cardMargin) * (this.sections.length + 1);
+        // Center grid vertically, but with less top padding
+        this.startY = Math.max(8, (this.scale.height - totalGridHeight) / 2);
         this.startX = this.scale.width/2 - this.cardWidth/2;
 
         // Drop zones (target order: Cervical, Thoracic, Lumbar, Sacral, Coccygeal) + buffer
         for (let i = 0; i < this.sections.length + 1; i++) {
             let zoneY = this.startY + i * (this.cardHeight + this.cardMargin);
+            // Prevent drop zones from going below screen
+            if (zoneY + this.cardHeight/2 > this.scale.height - 12) zoneY = this.scale.height - this.cardHeight/2 - 12;
             let color = i < this.sections.length ? 0xf0f0f0 : 0xf5f5f5;
             let stroke = i < this.sections.length ? 0x00796b : 0xcccccc;
             let zone = this.add.rectangle(this.startX + this.cardWidth/2, zoneY, this.cardWidth, this.cardHeight, color, 0.7).setStrokeStyle(2, stroke);
@@ -46,6 +50,8 @@ class Sort extends Phaser.Scene {
         // Draggable cards
         for (let i = 0; i < this.sections.length; i++) {
             let cardY = this.startY + i * (this.cardHeight + this.cardMargin);
+            // Prevent cards from going below screen
+            if (cardY + this.cardHeight/2 > this.scale.height - 12) cardY = this.scale.height - this.cardHeight/2 - 12;
             let card = this.add.rectangle(this.startX + this.cardWidth/2, cardY, this.cardWidth, this.cardHeight, 0xffffff, 1).setStrokeStyle(3, 0x388e3c).setInteractive({ draggable: true });
             card.data = this.sections[i];
             card.originalY = cardY;
