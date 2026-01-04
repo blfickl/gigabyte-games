@@ -5,8 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Horse Anatomy Memory Game</title>
     <style>
-        body { background: #eaf6ff; margin: 0; }
-        #game-container { margin: 0 auto; display: block; width: 800px; height: 600px; }
+        body { background: #eaf6ff; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #game-container {
+            margin: 0 auto;
+            display: block;
+            width: 95vw;
+            max-width: 400px;
+            height: 65vw;
+            max-height: 600px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            background: #f8f8f8;
+            border-radius: 16px;
+        }
+        @media (max-width: 500px) {
+            #game-container {
+                max-width: 98vw;
+                max-height: 80vw;
+                border-radius: 8px;
+            }
+        }
     </style>
 </head>
 <body>

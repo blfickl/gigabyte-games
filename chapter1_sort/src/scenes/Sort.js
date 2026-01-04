@@ -27,7 +27,8 @@ class Sort extends Phaser.Scene {
         this.cards = [];
         this.dropZones = [];
         this.draggingCard = null;
-        this.startY = 80;
+        // Move cards higher for mobile
+        this.startY = 24;
         this.startX = this.scale.width/2 - this.cardWidth/2;
 
         // Drop zones (target order: Cervical, Thoracic, Lumbar, Sacral, Coccygeal) + buffer
@@ -94,7 +95,7 @@ class Sort extends Phaser.Scene {
         });
 
         // Feedback text
-        this.feedbackText = this.add.text(this.scale.width/2, this.startY + this.sections.length * (this.cardHeight + this.cardMargin) + 30, '', { font: '20px Arial', color: '#c62828' }).setOrigin(0.5);
+        this.feedbackText = this.add.text(this.scale.width/2, this.startY + this.sections.length * (this.cardHeight + this.cardMargin) + 18, '', { font: '20px Arial', color: '#c62828' }).setOrigin(0.5);
     }
 
     checkOrder() {

@@ -5,6 +5,8 @@ class MazeScene extends Phaser.Scene {
 
   preload() {
     // Preload assets here (icons, player, etc.)
+    // Use spaceship.png as horse icon placeholder
+    this.load.image('horse', '../../treat-match/assets/spaceship.png');
   }
 
   create() {
@@ -154,13 +156,18 @@ class MazeScene extends Phaser.Scene {
   }
 
   createPlayer() {
-    // Add a simple player avatar (circle)
+    // Add a player avatar (circle + horse icon)
     // Start at top-left open cell (0,0)
     this.playerRow = 0;
     this.playerCol = 0;
     const px = this.mazeOriginX + this.playerCol * this.cellSize + this.cellSize/2;
     const py = this.mazeOriginY + this.playerRow * this.cellSize + this.cellSize/2;
+    // Main circle
     this.player = this.add.circle(px, py, this.cellSize*0.3, 0x1976d2).setDepth(2);
+    // Horse icon (centered on circle)
+    this.playerHorse = this.add.image(px, py, 'horse').setDisplaySize(this.cellSize*0.32, this.cellSize*0.32).setDepth(3);
+    // START label under the circle
+    this.playerStartText = this.add.text(px, py + this.cellSize*0.32, 'START', { font: '18px Arial', color: '#1976d2', fontStyle: 'bold', align: 'center' }).setOrigin(0.5, 0).setDepth(4);
   }
 
   createUI() {
@@ -232,10 +239,19 @@ class MazeScene extends Phaser.Scene {
       this.playerCol = newCol;
       const px = this.mazeOriginX + this.playerCol * this.cellSize + this.cellSize/2;
       const py = this.mazeOriginY + this.playerRow * this.cellSize + this.cellSize/2;
+      // Move circle
       this.tweens.add({
         targets: this.player,
         x: px,
         y: py,
+        duration: 120,
+        ease: 'Sine.easeInOut'
+      });
+      // Move horse icon and START text
+      this.tweens.add({
+        targets: [this.playerHorse, this.playerStartText],
+        x: px,
+        y: [py, py + this.cellSize*0.32],
         duration: 120,
         ease: 'Sine.easeInOut'
       });
@@ -260,7 +276,8 @@ class MazeScene extends Phaser.Scene {
         hazard.setActive(false).setVisible(false);
         this.score = Math.max(0, this.score - 1);
         this.scoreText.setText('Topline Score: ' + this.score + '/' + this.maxScore);
-        this.showPopup('Hazard! This reduces your topline score. Avoid red hazards!');
+        const hazardType = hazard.getData('type');
+        this.showPopup(`Hazard! This reduces your topline score. Avoid ${hazardType} hazards!`);
       }
     }
   }
