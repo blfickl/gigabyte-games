@@ -68,24 +68,43 @@ class Spelling extends Phaser.Scene {
     }
 
     create() {
-                    // Mobile keyboard support
-                    const mobileInput = document.getElementById('mobile-input');
-                    if (mobileInput) {
-                        mobileInput.value = '';
-                        mobileInput.focus();
-                        // Forward input to guessing logic
-                        mobileInput.addEventListener('input', (e) => {
-                            const val = mobileInput.value;
-                            if (val.length > 0) {
-                                const char = val[val.length - 1];
-                                this.handleLetterGuess({ key: char });
-                                mobileInput.value = '';
-                            }
-                        });
-                        // Refocus on tap/click
-                        window.addEventListener('touchstart', () => mobileInput.focus());
-                        window.addEventListener('mousedown', () => mobileInput.focus());
+            // Masked word display (underscores and revealed letters)
+            this.wordText = this.add.text(this.scale.width/2, 130, this.getMaskedWord(), { font: '32px Arial', color: '#005' }).setOrigin(0.5);
+        // On-screen letter buttons (A-Z) over four lines (7-7-6-6)
+        this.letterButtons = {};
+        const letterRows = [
+            'ABCDEFG',
+            'HIJKLMN',
+            'OPQRSTU',
+            'VWXYZ'
+        ];
+        const btnSize = 40;
+        const btnMargin = 10;
+        const totalRows = letterRows.length;
+        const gridHeight = totalRows * btnSize + (totalRows - 1) * btnMargin;
+        // Move the letter grid lower on the screen (e.g., +80px offset)
+        const startY = 330 - gridHeight/2;
+        for (let row = 0; row < letterRows.length; row++) {
+            const rowStr = letterRows[row];
+            const cols = rowStr.length;
+            const startX = this.scale.width/2 - ((cols * (btnSize + btnMargin) - btnMargin) / 2) + btnSize/2;
+            for (let col = 0; col < cols; col++) {
+                const letter = rowStr[col];
+                const x = startX + col * (btnSize + btnMargin);
+                const y = startY + row * (btnSize + btnMargin);
+                const btn = this.add.rectangle(x, y, btnSize, btnSize, 0xffffff, 1).setStrokeStyle(2, 0x00796b).setInteractive();
+                const txt = this.add.text(x, y, letter, { font: '22px Arial', color: '#00796b' }).setOrigin(0.5);
+                btn.on('pointerdown', () => {
+                    if (!btn.disabled) {
+                        btn.setFillStyle(0xcccccc, 1);
+                        txt.setColor('#888');
+                        btn.disabled = true;
+                        this.handleLetterGuess({ key: letter });
                     }
+                });
+                this.letterButtons[letter.toLowerCase()] = { btn, txt };
+            }
+        }
             // Debug text to show key events
         //    this.debugText = this.add.text(10, this.scale.height - 30, '', { font: '16px Arial', color: '#c62828' }).setOrigin(0, 1);
         this.muscles = [
@@ -102,23 +121,22 @@ class Spelling extends Phaser.Scene {
         this.errors = 0;
 
         this.add.text(this.scale.width/2, 40, 'Muscle Spelling Game', { font: '28px Arial', color: '#222' }).setOrigin(0.5);
-        // Show the answer word in red for testing
-        // Removed answerText display for production
-        this.wordText = this.add.text(this.scale.width/2, 130, this.getMaskedWord(), { font: '32px Arial', color: '#005' }).setOrigin(0.5);
-       this.guessedText = this.add.text(this.scale.width/2, 295, '', { font: '20px Arial', color: '#333', wordWrap: { width: Math.min(440, this.scale.width-40) } }).setOrigin(0.5);
+        // Move prompt higher so it's always visible above the letter grid
         this.promptText = this.add.text(this.scale.width/2, 180, this.muscles[this.current].prompt, { font: '20px Arial', color: '#333', wordWrap: { width: this.scale.width - 40 } }).setOrigin(0.5);
-        // Add a smaller box to make input area more obvious
-       this.inputBox = this.add.rectangle(this.scale.width/2, 250, Math.max(140, this.scale.width * 0.18), 44, 0xffffff, 0.8).setStrokeStyle(2, 0x00796b);
-        this.inputDisplay = this.add.text(this.scale.width/2, 250, 'Type a letter', { font: '28px Arial', color: '#00796b' }).setOrigin(0.5);
+        this.promptText.setY(180); // You can adjust this value (e.g., 160 or 150) if you want it even higher
+   
         this.feedbackText = this.add.text(this.scale.width/2, 320, '', { font: '24px Arial', color: '#c62828' }).setOrigin(0.5);
 
         this.stickHorseText = this.add.text(this.scale.width - 20, 40, '', { font: '24px Arial', color: '#c62828', align: 'right' }).setOrigin(1, 0);
 
-        this.input.keyboard.on('keydown', this.handleLetterGuess, this);
+        // Remove keyboard input for mobile/tablet friendliness
     }
 
     getMaskedWord() {
         // Show guessed letters, keep spaces
+        if (!this.muscles || !this.muscles[this.current] || !this.muscles[this.current].name) {
+            return '';
+        }
         const answer = this.muscles[this.current].name;
         let masked = '';
         for (let i = 0; i < answer.length; i++) {
@@ -140,7 +158,7 @@ class Spelling extends Phaser.Scene {
 
     handleLetterGuess(event) {
         // Only process single alphabetic keys
-        if (event.key.length === 1 && /^[a-zA-Z]$/.test(event.key)) {
+        if (event.key && event.key.length === 1 && /^[a-zA-Z]$/.test(event.key)) {
             const letter = event.key.toLowerCase();
             if (!this.guessedLetters.includes(letter)) {
                 this.guessedLetters.push(letter);
@@ -155,17 +173,29 @@ class Spelling extends Phaser.Scene {
             } else {
                 this.feedbackText.setColor('#c62828').setText('Already guessed!');
             }
+            // Grey out button if not already
+            if (this.letterButtons && this.letterButtons[letter]) {
+                this.letterButtons[letter].btn.setFillStyle(0xcccccc, 1);
+                this.letterButtons[letter].txt.setColor('#888');
+                this.letterButtons[letter].btn.disabled = true;
+            }
         }
-        this.inputDisplay.setText('Guessed: ' + this.guessedLetters.join(', '));
+        // Removed inputDisplay update (no longer shown)
     }
 
     updateGameState() {
         // Update masked word
-        this.wordText.setText(this.getMaskedWord());
+        if (this.wordText) {
+            this.wordText.setText(this.getMaskedWord());
+        }
         // Show guessed letters
-        this.guessedText.setText('Guessed: ' + this.guessedLetters.join(', '));
+        if (this.guessedText) {
+            this.guessedText.setText('Guessed: ' + this.guessedLetters.join(', '));
+        }
         // Show stick horse (hangman) progress
-        this.stickHorseText.setText('Errors: ' + this.errors + ' / ' + this.maxErrors);
+        if (this.stickHorseText) {
+            this.stickHorseText.setText('Errors: ' + this.errors + ' / ' + this.maxErrors);
+        }
         // Check win/lose
         const answer = this.muscles[this.current].name;
         const masked = this.getMaskedWord();
@@ -194,23 +224,50 @@ class Spelling extends Phaser.Scene {
     nextWord() {
         this.current++;
         this.guessedLetters = [];
+        // Re-enable all letter buttons
+        if (this.letterButtons) {
+            for (const letter in this.letterButtons) {
+                this.letterButtons[letter].btn.setFillStyle(0xffffff, 1);
+                this.letterButtons[letter].txt.setColor('#00796b');
+                this.letterButtons[letter].btn.disabled = false;
+            }
+        }
         this.errors = 0;
         if (this.current < this.muscles.length) {
-            // Removed answerText update for production
-            this.wordText.setText(this.getMaskedWord());
-            this.promptText.setText(this.muscles[this.current].prompt);
-            this.inputDisplay.setText('Type a letter');
-            this.feedbackText.setText('');
-            this.guessedText.setText('');
-            this.stickHorseText.setText('Errors: 0 / ' + this.maxErrors);
+            // Update masked word and prompt for new word
+            if (this.wordText) {
+                this.wordText.setText(this.getMaskedWord());
+            }
+            if (this.promptText) {
+                this.promptText.setText(this.muscles[this.current].prompt);
+            }
+            if (this.feedbackText) {
+                this.feedbackText.setText('');
+            }
+            if (this.guessedText) {
+                this.guessedText.setText('');
+            }
+            if (this.stickHorseText) {
+                this.stickHorseText.setText('Errors: 0 / ' + this.maxErrors);
+            }
         } else {
             // Removed answerText clear for production
-            this.wordText.setText('');
-            this.promptText.setText('All done! Score: ' + this.score + '/' + this.muscles.length);
-            this.inputDisplay.setText('');
-            this.feedbackText.setText('');
-            this.guessedText.setText('');
-            this.stickHorseText.setText('');
+            if (this.wordText) {
+                this.wordText.setText('');
+            }
+            if (this.promptText) {
+                this.promptText.setText('All done! Score: ' + this.score + '/' + this.muscles.length);
+            }
+            // inputDisplay was removed; nothing to clear here
+            if (this.feedbackText) {
+                this.feedbackText.setText('');
+            }
+            if (this.guessedText) {
+                this.guessedText.setText('');
+            }
+            if (this.stickHorseText) {
+                this.stickHorseText.setText('');
+            }
             this.showEndPopup();
         }
     }
