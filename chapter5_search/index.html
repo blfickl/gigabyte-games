@@ -1,25 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phaser Word Search Game</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
     <style>
-        body { margin: 0; background: #222; color: #fff; font-family: sans-serif; }
-        #game-container { margin: 20px auto; display: block; width: 420px; }
+        body {
+            margin: 0;
+            background: #222;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        #game-container {
+            margin: 20px auto;
+            display: block;
+            width: 420px;
+        }
+
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .custom-modal-content {
+            background: #fff;
+            color: #222;
+            margin: 15% auto;
+            padding: 30px 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-modal-btn {
+            margin-top: 20px;
+            padding: 8px 24px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .custom-modal-btn:hover {
+            background: #555;
+        }
     </style>
 </head>
+
 <body>
-    <h2 style="text-align:center;">Bridging The Back/h2>
+    <h2 style="text-align:center;">The Vision</h2>
     <div id="game-container"></div>
+    <!-- Custom Modal Alert -->
+    <div id="customModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <div id="customModalMsg">Congratulations! You found all the words!</div>
+            <button class="custom-modal-btn" onclick="closeCustomModal()">OK</button>
+        </div>
+    </div>
     <script>
-        const words = ["GIGABYTE", "TOPLINE", "HILLS", "CONNECTION",  "TROT", "BACK"];
+        const words = ["MISCHIEF", "GAIA", "PRESENCE", "FIERCE", "PROMISE", "TALE"];
         const gridSize = 10;
         let grid = [];
 
         function makeEmptyGrid(size) {
-            return Array.from({length: size}, () => Array(size).fill(''));
+            return Array.from({ length: size }, () => Array(size).fill(''));
         }
 
         function fillGridRandom(grid) {
@@ -36,9 +93,9 @@
         function placeWord(grid, word) {
             // Try to place horizontally, vertically, or diagonally
             const directions = [
-                {dx: 1, dy: 0}, // right
-                {dx: 0, dy: 1}, // down
-                {dx: 1, dy: 1}  // diagonal
+                { dx: 1, dy: 0 }, // right
+                { dx: 0, dy: 1 }, // down
+                { dx: 1, dy: 1 }  // diagonal
             ];
             for (let tries = 0; tries < 100; tries++) {
                 const dir = directions[Math.floor(Math.random() * directions.length)];
@@ -108,16 +165,16 @@
                         font: '28px monospace',
                         color: '#fff',
                         backgroundColor: '#444',
-                        padding: {x: 8, y: 4}
+                        padding: { x: 8, y: 4 }
                     })
-                    .setInteractive()
-                    .on('pointerdown', function () {
-                        if (!selected.some(s => s.x === x && s.y === y)) {
-                            cell.setStyle({backgroundColor: '#0a0'});
-                            selected.push({x, y, cell});
-                            checkSelection();
-                        }
-                    });
+                        .setInteractive()
+                        .on('pointerdown', function () {
+                            if (!selected.some(s => s.x === x && s.y === y)) {
+                                cell.setStyle({ backgroundColor: '#0a0' });
+                                selected.push({ x, y, cell });
+                                checkSelection();
+                            }
+                        });
                 }
             }
             // Show word list below the grid: three words per row, centered
@@ -139,19 +196,28 @@
             }
         }
 
+        function showCustomModal(message) {
+            document.getElementById('customModalMsg').textContent = message;
+            document.getElementById('customModal').style.display = 'block';
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
         function checkSelection() {
             if (selected.length < 3) return;
             let str = selected.map(s => grid[s.y][s.x]).join('');
             let found = words.find(w => w === str);
             if (found && !foundWords.includes(found)) {
                 foundWords.push(found);
-                selected.forEach(s => s.cell.setStyle({backgroundColor: '#00f'}));
+                selected.forEach(s => s.cell.setStyle({ backgroundColor: '#00f' }));
                 selected = [];
                 if (foundWords.length === words.length) {
-                    alert('Congratulations! You found all the words!');
+                    showCustomModal('Congratulations! You found all the words!');
                 }
             } else if (str.length > Math.max(...words.map(w => w.length))) {
-                selected.forEach(s => s.cell.setStyle({backgroundColor: '#444'}));
+                selected.forEach(s => s.cell.setStyle({ backgroundColor: '#444' }));
                 selected = [];
             }
         }
@@ -159,4 +225,5 @@
         new Phaser.Game(config);
     </script>
 </body>
+
 </html>
