@@ -20,6 +20,13 @@ class MergeGame extends Phaser.Scene {
     }
 
     create() {
+                // On-screen arrow button controls
+                if (document.getElementById('arrow-up')) {
+                    document.getElementById('arrow-up').onclick = () => this.handleMove({ key: 'ArrowUp' });
+                    document.getElementById('arrow-down').onclick = () => this.handleMove({ key: 'ArrowDown' });
+                    document.getElementById('arrow-left').onclick = () => this.handleMove({ key: 'ArrowLeft' });
+                    document.getElementById('arrow-right').onclick = () => this.handleMove({ key: 'ArrowRight' });
+                }
         this.grid = [];
         this.sprites = [];
         // Initialize grid with random shapes, all yellow
