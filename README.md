@@ -1,6 +1,13 @@
 Initialize git:
  git init
 
+git add .
+
+Commit your changes:
+ git commit -m "Add chapter1_search word search game"
+
+git push
+
 Add your remote (if you haven’t already):
  git remote add origin https://github.com/blfickl/gigabyte-games.git
 
@@ -29,3 +36,9 @@ Commit your changes:
 
 Push to GitHub:
  git push -u origin main
+
+In VS Code, right-click on index.html and select "Open with Live Server" (if you have the Live Server extension installed).
+If you don’t have Live Server, you can open the file directly:
+Go to your file explorer.
+Navigate to c:\Users\bridg\Documents\phaser\gigabyte-games\chapter1_search\index.html.
+Double-click the file to open it in your default browser.
