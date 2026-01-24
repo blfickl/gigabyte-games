@@ -33,6 +33,34 @@ class MergeGame extends Phaser.Scene {
             }
         }
         this.input.keyboard.on('keydown', this.handleMove, this);
+
+        // Add swipe gesture support for mobile
+        let startX = 0, startY = 0, endX = 0, endY = 0;
+        this.input.on('pointerdown', (pointer) => {
+            startX = pointer.x;
+            startY = pointer.y;
+        });
+        this.input.on('pointerup', (pointer) => {
+            endX = pointer.x;
+            endY = pointer.y;
+            const dx = endX - startX;
+            const dy = endY - startY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
+                // Horizontal swipe
+                if (dx > 0) {
+                    this.handleMove({ key: 'ArrowRight' });
+                } else {
+                    this.handleMove({ key: 'ArrowLeft' });
+                }
+            } else if (Math.abs(dy) > 20) {
+                // Vertical swipe
+                if (dy > 0) {
+                    this.handleMove({ key: 'ArrowDown' });
+                } else {
+                    this.handleMove({ key: 'ArrowUp' });
+                }
+            }
+        });
     }
 
     drawShape(x, y, shape, color) {
