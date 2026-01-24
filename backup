@@ -1,0 +1,206 @@
+const GRID_SIZE = 4;
+const CELL_SIZE = 80;
+const SHAPES = ['circle', 'square', 'triangle', 'diamond'];
+const COLORS = ['green', 'blue', 'red']; // 0: green, 1: blue, 2: red
+
+function getNextColor(color) {
+    const idx = COLORS.indexOf(color);
+    return idx < COLORS.length - 1 ? COLORS[idx + 1] : COLORS[idx];
+}
+
+function randomShape() {
+    return SHAPES[Math.floor(Math.random() * SHAPES.length)];
+}
+
+class MergeGame extends Phaser.Scene {
+    constructor() {
+        super('MergeGame');
+        this.grid = [];
+        this.sprites = [];
+    }
+
+    create() {
+        this.grid = [];
+        this.sprites = [];
+        // Initialize grid with random shapes, all green
+        for (let y = 0; y < GRID_SIZE; y++) {
+            this.grid[y] = [];
+            this.sprites[y] = [];
+            for (let x = 0; x < GRID_SIZE; x++) {
+                const shape = randomShape();
+                this.grid[y][x] = { shape, color: 'green' };
+                this.sprites[y][x] = this.drawShape(x, y, shape, 'green');
+            }
+        }
+        this.input.keyboard.on('keydown', this.handleMove, this);
+    }
+
+    drawShape(x, y, shape, color) {
+        const px = 40 + x * CELL_SIZE;
+        const py = 40 + y * CELL_SIZE;
+        let graphics = this.add.graphics();
+        graphics.clear();
+        graphics.fillStyle(this.getColorHex(color), 1);
+        switch (shape) {
+            case 'circle':
+                graphics.fillCircle(px + CELL_SIZE/2, py + CELL_SIZE/2, 30);
+                break;
+            case 'square':
+                graphics.fillRect(px + 10, py + 10, 60, 60);
+                break;
+            case 'triangle':
+                graphics.fillTriangle(
+                    px + CELL_SIZE/2, py + 10,
+                    px + 10, py + CELL_SIZE - 10,
+                    px + CELL_SIZE - 10, py + CELL_SIZE - 10
+                );
+                break;
+            case 'diamond':
+                graphics.fillPoints([
+                    {x: px + CELL_SIZE/2, y: py + 10},
+                    {x: px + 10, y: py + CELL_SIZE/2},
+                    {x: px + CELL_SIZE/2, y: py + CELL_SIZE - 10},
+                    {x: px + CELL_SIZE - 10, y: py + CELL_SIZE/2}
+                ], true);
+                break;
+        }
+        return graphics;
+    }
+
+    getColorHex(color) {
+        switch (color) {
+            case 'green': return 0x2ecc40;
+            case 'blue': return 0x0074d9;
+            case 'red': return 0xff4136;
+            default: return 0xffffff;
+        }
+    }
+
+    handleMove(event) {
+        let moved = false;
+        if (event.key === 'ArrowLeft') moved = this.move(-1, 0);
+        if (event.key === 'ArrowRight') moved = this.move(1, 0);
+        if (event.key === 'ArrowUp') moved = this.move(0, -1);
+        if (event.key === 'ArrowDown') moved = this.move(0, 1);
+        if (moved) {
+            this.addRandomGreenShape();
+            this.redraw();
+            if (this.isGameOver()) {
+                setTimeout(() => {
+                    alert('Game Over! No more moves possible.');
+                }, 100);
+            }
+        }
+        addRandomGreenShape() {
+            // Find all empty cells
+            let empty = [];
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    if (!this.grid[y][x]) empty.push({x, y});
+                }
+            }
+            if (empty.length === 0) return;
+            let idx = Math.floor(Math.random() * empty.length);
+            let {x, y} = empty[idx];
+            this.grid[y][x] = { shape: randomShape(), color: 'green' };
+        }
+
+        isGameOver() {
+            // If any cell is empty, not game over
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    if (!this.grid[y][x]) return false;
+                }
+            }
+            // Check for possible merges
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    let cell = this.grid[y][x];
+                    if (!cell) continue;
+                    for (let [dx, dy] of [[1,0],[0,1],[-1,0],[0,-1]]) {
+                        let nx = x + dx, ny = y + dy;
+                        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                            let neighbor = this.grid[ny][nx];
+                            if (neighbor && neighbor.shape === cell.shape && neighbor.color === cell.color && cell.color !== 'red') {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
+    move(dx, dy) {
+        let moved = false;
+        let range = [...Array(GRID_SIZE).keys()];
+        if (dx > 0 || dy > 0) range = range.reverse();
+
+        // For each row/column, only allow one merge per move
+        for (let i of range) {
+            let mergedThisLine = false;
+            for (let j of range) {
+                let x = dx !== 0 ? j : i;
+                let y = dy !== 0 ? j : i;
+                let cell = this.grid[y][x];
+                if (!cell) continue;
+                let nx = x, ny = y;
+                while (true) {
+                    let tx = nx + dx, ty = ny + dy;
+                    if (tx < 0 || tx >= GRID_SIZE || ty < 0 || ty >= GRID_SIZE) break;
+                    let target = this.grid[ty][tx];
+                    if (!target) {
+                        this.grid[ty][tx] = cell;
+                        this.grid[ny][nx] = null;
+                        nx = tx; ny = ty;
+                        moved = true;
+                    } else if (
+                        !mergedThisLine &&
+                        cell.shape === target.shape &&
+                        cell.color === target.color &&
+                        cell.color !== 'red'
+                    ) {
+                        // Merge only once per row/col per move
+                        this.grid[ty][tx] = { shape: cell.shape, color: getNextColor(cell.color) };
+                        this.grid[ny][nx] = null;
+                        mergedThisLine = true;
+                        moved = true;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        return moved;
+    }
+
+    redraw() {
+        // Remove all graphics
+        for (let row of this.sprites) for (let g of row) if (g) g.destroy();
+        this.sprites = [];
+        for (let y = 0; y < GRID_SIZE; y++) {
+            this.sprites[y] = [];
+            for (let x = 0; x < GRID_SIZE; x++) {
+                let cell = this.grid[y][x];
+                if (cell) {
+                    this.sprites[y][x] = this.drawShape(x, y, cell.shape, cell.color);
+                } else {
+                    this.sprites[y][x] = null;
+                }
+            }
+        }
+    }
+}
+
+const config = {
+    type: Phaser.AUTO,
+    width: 400,
+    height: 400,
+    backgroundColor: '#333',
+    parent: 'game-container',
+    scene: [MergeGame]
+};
+
+new Phaser.Game(config);
