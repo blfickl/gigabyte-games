@@ -117,7 +117,7 @@ class Spelling extends Phaser.Scene {
         this.current = 0;
         this.score = 0;
         this.guessedLetters = [];
-        this.maxErrors = 6;
+        this.maxErrors = 15;
         this.errors = 0;
 
         this.add.text(this.scale.width/2, 40, 'Muscle Spelling Game', { font: '28px Arial', color: '#222' }).setOrigin(0.5);
