@@ -1,14 +1,8 @@
-
-
-console.log('window.MatchScene:', window.MatchScene);
-
-
 const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-    backgroundColor: "#f0f8ff",
- // backgroundColor: "#da7f91",
+  backgroundColor: "#eaf6ff",
   parent: 'game-container',
   scene: [window.MatchScene],
   scale: {
