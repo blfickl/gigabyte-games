@@ -17,11 +17,13 @@ class MatchScene extends Phaser.Scene {
 
     // Card data with custom matched text
     const cards = [
-      { left: "Halt", right: "Patience, presence and readiness.", matched: "Halt - Curiosity is revealed when the foal leans forward, sniffs, shifts weight to investigate." },
-      { left: "Walk", right: "Foal follows rythmn and connection.", matched: "Walk - Ears flicking, exploring objects along the path. Watch for drifting into handler space." },
-      { left: "Trot", right: "Energy, expression, honesty.", matched: "Trot - Foal is comfortable with the handler when they stay connected even when excited." },
-        { left: "Canter", right: "Joy, freedom and instint when loose.", matched: "Canter - Curiosity is demonstrated with playful movements and exploration. Watch for kicking out and crowding during play." }
+      { left: "Bold Explorer", right: "Alert, scanning for new things.", matched: "Bold Explorer - herd lesson - wait for the leader’s signal." },
+      { left: "Gentle Observer", right: "Still, listening to the environment.", matched: "Gentle Observer - herd lesson -confidence grows through predictability." },
+      { left: "Spicy Sprite", right: "Fidgety, testing boundaries.", matched: "Spicy Sprite - herd lesson - Stillness is respect." },
+        { left: "Snugglebug", right: "Leans toward others for comfort.", matched: "Snugglebug - herd lesson -stand independently.." }
       ];
+
+
 
 
     // Shuffle cards
@@ -53,8 +55,9 @@ class MatchScene extends Phaser.Scene {
     const shuffledRight = Phaser.Utils.Array ? Phaser.Utils.Array.Shuffle([...cards]) : cards.sort(() => Math.random() - 0.5);
     shuffledRight.forEach((item, i) => {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
-      // #fff6e5 (creamy white) for before dropped
-      const card = this.add.rectangle(0, 0, rightW, rightH, 0xfff6e5, 1).setStrokeStyle(2, 0x1976d2);
+        // #fff6e5 (creamy white) for before dropped
+        // #5a4a3a (muted brown) for stroke after dropped
+      const card = this.add.rectangle(0, 0, rightW, rightH, 0xfff6e5, 1).setStrokeStyle(2, 0x5a4a3a);
       const text = this.add.text(0, 0, item.right, { font: "18px Arial", color: "#5a4a3a", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
       const container = this.add.container(rightX, y, [card, text]);
       container.setSize(rightW, rightH);
@@ -90,7 +93,7 @@ class MatchScene extends Phaser.Scene {
           if (this.starterText) this.starterText.destroy();
           // Show congratulations text at the top
           const congratsText = this.add.text(this.sys.game.config.width/2, 30, "All Matches Complete.  Congratulations!", {
-            font: "22px Arial",
+            font: "20px Arial",
             color: "#5a4a3a",
             fontStyle: "bold",
             align: "center"
