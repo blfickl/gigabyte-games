@@ -29,8 +29,8 @@ class MatchScene extends Phaser.Scene {
     // Layout
     const leftX = this.sys.game.config.width * 0.10;
     const rightX = this.sys.game.config.width * 0.60;
-    const cardW = 120, cardH = 60;
-    const rightW = 220, rightH = 110;
+    const cardW = 120, cardH = 80;
+    const rightW = 220, rightH = 140;
     const spacing = this.sys.game.config.height * 0.13;
     // Store containers for drag logic
     const leftContainers = [];
@@ -38,7 +38,8 @@ class MatchScene extends Phaser.Scene {
     // Left cards (shuffled)
     shuffled.forEach((item, i) => {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
-      const card = this.add.rectangle(0, 0, cardW, cardH, 0xffffff, 1).setStrokeStyle(2, 0x1976d2);
+      // #fff6e5 (creamy white) for before dropped
+      const card = this.add.rectangle(0, 0, cardW, cardH, 0xfff6e5, 1).setStrokeStyle(2, 0x1976d2);
       const text = this.add.text(0, 0, item.left, { font: "22px Arial", color: "#5a4a3a" }).setOrigin(0.5);
       const container = this.add.container(leftX, y, [card, text]);
       container.setSize(cardW, cardH);
@@ -52,7 +53,8 @@ class MatchScene extends Phaser.Scene {
     const shuffledRight = Phaser.Utils.Array ? Phaser.Utils.Array.Shuffle([...cards]) : cards.sort(() => Math.random() - 0.5);
     shuffledRight.forEach((item, i) => {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
-      const card = this.add.rectangle(0, 0, rightW, rightH, 0xe3eafc, 1).setStrokeStyle(2, 0x1976d2);
+      // #fff6e5 (creamy white) for before dropped
+      const card = this.add.rectangle(0, 0, rightW, rightH, 0xfff6e5, 1).setStrokeStyle(2, 0x1976d2);
       const text = this.add.text(0, 0, item.right, { font: "20px Arial", color: "#5a4a3a", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
       const container = this.add.container(rightX, y, [card, text]);
       container.setSize(rightW, rightH);
@@ -74,14 +76,15 @@ class MatchScene extends Phaser.Scene {
     });
     // Drop logic
     this.input.on("drop", (pointer, gameObject, dropTarget) => {
-      console.log('Drop event fired', gameObject, dropTarget);
-      console.log('gameObject.matchKey:', gameObject.matchKey, 'dropTarget.matchKey:', dropTarget.matchKey);
+    //  console.log('Drop event fired', gameObject, dropTarget);
+    //  console.log('gameObject.matchKey:', gameObject.matchKey, 'dropTarget.matchKey:', dropTarget.matchKey);
       if (gameObject.matchKey && dropTarget.matchKey && gameObject.matchKey === dropTarget.matchKey) {
-        dropTarget.list[0].setFillStyle(0xc8e6c9, 1);
+        // #d0e6c3 (light muted green) for after dropped
+        dropTarget.list[0].setFillStyle(0xd0e6c3, 1);
         dropTarget.list[1].setText(gameObject.matchedText);
         gameObject.disableInteractive();
         this.matches++;
-        console.log('Current matches:', this.matches);
+    //    console.log('Current matches:', this.matches);
         if (this.matches === cards.length) {
           // Remove starter message
           if (this.starterText) this.starterText.destroy();
@@ -92,7 +95,7 @@ class MatchScene extends Phaser.Scene {
             fontStyle: "bold",
             align: "center"
           }).setOrigin(0.5, 0);
-          console.log('All matches complete!');
+       //   console.log('All matches complete!');
         }
       }
     });
