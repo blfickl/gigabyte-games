@@ -9,7 +9,7 @@ class MatchScene extends Phaser.Scene {
 
     // Show a starter message at the top
     const starterText = this.add.text(this.sys.game.config.width/2, 24, "Drag the cards to match them!", {
-      font: "44px Arial",
+      font: "20px Arial",
       color: "#222",
       align: "center"
     }).setOrigin(0.5, 0);
@@ -57,7 +57,7 @@ class MatchScene extends Phaser.Scene {
     shuffled.forEach((item, i) => {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
       const card = this.add.rectangle(0, 0, cardW, cardH, 0xffffff, 1).setStrokeStyle(2, 0x1976d2);
-      const text = this.add.text(0, 0, item.left, { font: "22px Arial", color: "#222" }).setOrigin(0.5);
+      const text = this.add.text(0, 0, item.left, { font: "20px Arial", color: "#222" }).setOrigin(0.5);
       const container = this.add.container(leftX, y, [card, text]);
       container.setSize(cardW, cardH);
       container.setInteractive({ draggable: true });
@@ -71,7 +71,7 @@ class MatchScene extends Phaser.Scene {
     shuffledRight.forEach((item, i) => {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
       const card = this.add.rectangle(0, 0, rightW, rightH, 0xe3eafc, 1).setStrokeStyle(2, 0x1976d2);
-      const text = this.add.text(0, 0, item.right, { font: "22px Arial", color: "#222", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
+      const text = this.add.text(0, 0, item.right, { font: "20px Arial", color: "#222", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
       const container = this.add.container(rightX, y, [card, text]);
       container.setSize(rightW, rightH);
       container.setInteractive({ dropZone: true });
@@ -105,7 +105,7 @@ class MatchScene extends Phaser.Scene {
           if (this.starterText) this.starterText.destroy();
           // Show congratulations text at the top
           const congratsText = this.add.text(this.sys.game.config.width/2, 30, "All Matches Complete.  Congratulations!", {
-            font: "28px Arial",
+            font: "24px Arial",
             color: "#1976d2",
             fontStyle: "bold",
             align: "center"

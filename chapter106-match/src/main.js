@@ -2,7 +2,7 @@ const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: "#eaf6ff",
+  backgroundColor: "#e6d3b3",
   parent: 'game-container',
   scene: [window.MatchScene],
   scale: {

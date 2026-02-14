@@ -9,7 +9,7 @@ class MatchScene extends Phaser.Scene {
 
     // Show a starter message at the top
     const starterText = this.add.text(this.sys.game.config.width/2, 24, "Drag the cards to match them!", {
-      font: "44px Arial",
+      font: "24px Arial",
       color: "#222",
       align: "center"
     }).setOrigin(0.5, 0);
@@ -17,12 +17,11 @@ class MatchScene extends Phaser.Scene {
 
     // Card data with custom matched text
     const cards = [
-      { left: "Walk", right: "Gentle sway, four-beat rhythm. Back moves side-to-side.", matched: "Walk - Feel the sway. Let your hips follow the rhythm." },
-      { left: "Trot", right: "Two-beat diagonal gait. Back springs between steps.", matched: "Trot - Post or sit with breath. Feel the bounce and support." },
-      { left: "Canter", right: "Three-beat gait with suspension. Back arches and releases.", matched: "Canter - Match the swing. Stay centered in the lift." },
-      { left: "Gallop", right: "Four-beat extended stride. Back stretches and contracts.", matched: "Gallop - Allow freedom. Stay soft in your seat and spine." }
+      { left: "Walk", right: "A loose Ribcage creates a rolling, four-beat walk.", matched: "Walk - Tight Ribcage makes the walk short, flat, or mechanical." },
+      { left: "Trot", right: "Symmetry, elasticity, and the horse’s ability to bend through the body.", matched: "Trot - Horses with emotional tension often hold their breath here." },
+      { left: "Canter", right: "Balance, coordination, and the horse’s ability to organize the body.", matched: "Canter - Tight ribs cause rushing, leaning, or difficulty holding leads." },
+      { left: "Gallop", right: "How fully the horse can expand the ribcage for power and speed.", matched: "Gallop - Breath, Freedom & Expansion." }
       ];
-      
 
 
     // Shuffle cards
@@ -88,7 +87,7 @@ class MatchScene extends Phaser.Scene {
           if (this.starterText) this.starterText.destroy();
           // Show congratulations text at the top
           const congratsText = this.add.text(this.sys.game.config.width/2, 30, "All Matches Complete.  Congratulations!", {
-            font: "28px Arial",
+            font: "24px Arial",
             color: "#1976d2",
             fontStyle: "bold",
             align: "center"
