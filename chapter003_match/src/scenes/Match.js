@@ -54,7 +54,7 @@ class MatchScene extends Phaser.Scene {
     shuffledRight.forEach((item, i) => {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
       // #fff6e5 (creamy white) for before dropped
-      const card = this.add.rectangle(0, 0, rightW, rightH, 0xfff6e5, 1).setStrokeStyle(2, 0x1976d2);
+      const card = this.add.rectangle(0, 0, rightW, rightH, 0xfff6e5, 1).setStrokeStyle(2, 0x5a4a3a);
       const text = this.add.text(0, 0, item.right, { font: "18px Arial", color: "#5a4a3a", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
       const container = this.add.container(rightX, y, [card, text]);
       container.setSize(rightW, rightH);

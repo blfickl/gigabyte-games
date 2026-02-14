@@ -31,7 +31,7 @@ class MatchScene extends Phaser.Scene {
     // Layout
     const leftX = this.sys.game.config.width * 0.10;
     const rightX = this.sys.game.config.width * 0.60;
-    const cardW = 120, cardH = 80;
+    const cardW = 160, cardH = 80;
     const rightW = 220, rightH = 140;
     const spacing = this.sys.game.config.height * 0.13;
     // Store containers for drag logic
