@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 14 - Timed True/False Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f8f8; margin: 0; padding: 0; }
+    #game-container { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px #bbb; padding: 24px; }
+    .question { font-size: 1.2em; margin-bottom: 18px; }
+    .timer { font-size: 1.1em; color: #c62828; margin-bottom: 12px; }
+    .tf-btn { padding: 14px 0; border: 1px solid #388e3c; border-radius: 6px; background: #e8f5e9; cursor: pointer; font-size: 1.1em; margin: 0 10px; width: 40%; transition: background 0.2s; }
+    .tf-btn:hover { background: #c8e6c9; }
+    .score { margin-top: 18px; font-size: 1.1em; }
+    .start-btn, .restart-btn { margin-top: 20px; padding: 10px 20px; font-size: 1em; border: none; border-radius: 5px; background: #388e3c; color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div class="question" id="question"></div>
+    <div class="timer" id="timer"></div>
+    <div id="tf-buttons" style="margin-bottom:20px;">
+      <button class="tf-btn" id="trueBtn">True</button>
+      <button class="tf-btn" id="falseBtn">False</button>
+    </div>
+    <div class="score" id="score"></div>
+    <button class="start-btn" id="startBtn">Start Quiz</button>
+    <button class="restart-btn" id="restartBtn" style="display:none">Restart</button>
+  </div>
+  <script src="src/main.js"></script>
+</body>
+</html>

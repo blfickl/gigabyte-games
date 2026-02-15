@@ -157,7 +157,7 @@ const questions = [
         label: "Ignoring differences and focusing only on speed and competition."
       }
     ]
-    },
+    }
   
   // ...existing questions remain unchanged...
 ];
