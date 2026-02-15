@@ -1,4 +1,4 @@
-// Memory.js - Main scene for horse anatomy memory game
+// Memory.js - Main scene for horse limb memory game
 class Memory extends Phaser.Scene {
     constructor() {
         super({ key: 'Memory' });
@@ -9,13 +9,13 @@ class Memory extends Phaser.Scene {
     }
 
     create() {
-        // Card names (added 'Gigabyte')
-        this.cardNames = ['back', 'poll & jaw', 'shoulders', 'hindquarters', 'ribcage', 'Gigabyte'];
+        // Card names for limb anatomy
+        this.cardNames = ['Scapula', 'Hock', 'Stifle', 'Fetlock', 'Carpus', 'Pastern'];
         // Duplicate and shuffle for pairs
         let cards = [...this.cardNames, ...this.cardNames];
         Phaser.Utils.Array.Shuffle(cards);
 
-        // Layout grid: 3 rows, 4 columns (smaller for mobile)
+        // Layout grid: 3 rows, 4 columns
         this.cardWidth = 72;
         this.cardHeight = 60;
         this.cardMargin = 10;
@@ -45,10 +45,6 @@ class Memory extends Phaser.Scene {
             card.on('pointerdown', () => this.flipCard(card));
             this.cards.push(card);
         }
-
-        // Timer and moves display commented out for now
-        // this.timerText = this.add.text(this.scale.width/2, startY + gridHeight/2 + 30, 'Time: 0s', { font: '20px Arial', color: '#222' }).setOrigin(0.5, 0);
-        // this.movesText = this.add.text(this.scale.width/2, startY + gridHeight/2 + 60, 'Moves: 0', { font: '20px Arial', color: '#222' }).setOrigin(0.5, 0);
     }
 
     flipCard(card) {
@@ -64,7 +60,6 @@ class Memory extends Phaser.Scene {
         }
         if (this.flipped.length === 2) {
             this.moves++;
-            // if (this.movesText) this.movesText.setText('Moves: ' + this.moves);
             this.time.delayedCall(800, () => this.checkMatch(), [], this);
         }
     }
@@ -83,8 +78,6 @@ class Memory extends Phaser.Scene {
         }
         this.flipped = [];
         if (this.matched.length === this.cards.length) {
-            // let timeTaken = Math.round((this.time.now - this.startTime)/1000);
-            // if (this.timerText) this.timerText.setText('Completed in ' + timeTaken + 's! Moves: ' + this.moves);
             this.showCongratsPopup();
         }
     }
@@ -100,16 +93,17 @@ class Memory extends Phaser.Scene {
         const congratsText = this.add.text(popupX, popupY - 110, 'Congratulations! You matched all pairs!', { font: '24px Arial', color: '#388e3c', align: 'center', wordWrap: { width: popupWidth - 40 } }).setOrigin(0.5);
         // Bullet points
         const bullets = [
-            'Back: Supports posture and movement',
-            'Poll & Jaw: Key for head carriage and relaxation',
-            'Shoulders: Enable reach and stride',
-            'Hindquarters: Power for propulsion',
-            'Ribcage: Flexibility for breathing and bending'
+            'Pastern: This is where the hoof meets the world.',
+            'Hock: A complex joint with huge influence on propulsion.',
+            'Fetlock: The fetlock is the spring of the limb',
+            'Stifle: The stifle is the hinge that controls engagement.',
+            'Scapula: Shoulder - the front-end equivalent of the pelvis',
+            'Carpus: A complex, multi-bone hinge that stabilizes the limb.',
+            'Pelvis: The pelvis ties the whole system together. Gluteal and hamstring power, ability to sit, coil, and lift and connection to the spine and core'
         ];
-      
         let bulletY = popupY - 60;
         for (let i = 0; i < bullets.length; i++) {
-            this.add.text(popupX - popupWidth / 2 + 40, bulletY + i * 36, '• ' + bullets[i], { font: '20px Arial', color: '#222', wordWrap: { width: popupWidth - 80 } }).setOrigin(0, 0.5);
+            this.add.text(popupX - popupWidth / 2 + 40, bulletY + i * 36, '• ' + bullets[i], { font: '14px Arial', color: '#222', wordWrap: { width: popupWidth - 80 } }).setOrigin(0, 0.5);
         }
         // Close button
         const closeBtn = this.add.text(popupX, popupY + popupHeight / 2 - 30, ' ', { font: '28px Arial', color: '#c62828', backgroundColor: '#fff' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1000);
@@ -117,15 +111,11 @@ class Memory extends Phaser.Scene {
             popupBg.destroy();
             congratsText.destroy();
             closeBtn.destroy();
-            // Optionally, you could restart the game or show a menu here
         });
     }
-       
-    
 
     update() {
-        // let timeElapsed = Math.round((this.time.now - this.startTime)/1000);
-        // if (this.timerText) this.timerText.setText('Time: ' + timeElapsed + 's');
+        // No timer/moves display for now
     }
 }
 
