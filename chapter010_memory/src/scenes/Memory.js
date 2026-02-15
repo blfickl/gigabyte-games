@@ -85,7 +85,7 @@ class Memory extends Phaser.Scene {
     showCongratsPopup() {
         // Popup background
         const popupWidth = 440;
-        const popupHeight = 320;
+        const popupHeight = 380;
         const popupX = this.scale.width / 2;
         const popupY = this.scale.height / 2;
         const popupBg = this.add.rectangle(popupX, popupY, popupWidth, popupHeight, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
