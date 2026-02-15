@@ -17,10 +17,10 @@ class MatchScene extends Phaser.Scene {
 
     // Card data with custom matched text
     const cards = [
-      { left: "Bold Explorer", right: "Alert, scanning for new things.", matched: "Bold Explorer - herd lesson - wait for the leader’s signal." },
-      { left: "Gentle Observer", right: "Still, listening to the environment.", matched: "Gentle Observer - herd lesson -confidence grows through predictability." },
-      { left: "Spicy Sprite", right: "Fidgety, testing boundaries.", matched: "Spicy Sprite - herd lesson - Stillness is respect." },
-        { left: "Snugglebug", right: "Leans toward others for comfort.", matched: "Snugglebug - herd lesson -stand independently.." }
+      { left: "Halt", right: "Stillness, readiness, settling the body under new sensations.", matched: " Halt Acceptance of saddle and girth without fidgeting. Understanding the rider’s weight as a neutral sensation. Balance: square stance, soft topline." },
+      { left: "Walk", right: "Rhythm, confidence, first steps into partnership.", matched: " Walk - how he organizes his body under rider weight. Whether he stays loose through the back or braces. Emotional state: curious, uncertain, or seeking reassurance" },
+      { left: "Trot", right: "The first test of balance under saddle.", matched: " Trot - natural rhythm vs. tension or rushing. How he responds to the rider’s posting or seat changes. Early signs of straightness or drifting." },
+        { left: "Canter", right: "Freedom meeting structure, the beginning of true coordination.", matched: " Canter - emotional readiness — can he stay calm in a bigger gait?. Ability to balance with a rider during lead departures. Whether he braces, hollows, or stays soft" }
       ];
 
 
@@ -31,7 +31,7 @@ class MatchScene extends Phaser.Scene {
     // Layout
     const leftX = this.sys.game.config.width * 0.10;
     const rightX = this.sys.game.config.width * 0.60;
-    const cardW = 140, cardH = 80;
+    const cardW = 120, cardH = 80;
     const rightW = 220, rightH = 160;
     const spacing = this.sys.game.config.height * 0.13;
     // Store containers for drag logic
@@ -42,7 +42,7 @@ class MatchScene extends Phaser.Scene {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
       // #fff6e5 (creamy white) for before dropped
       const card = this.add.rectangle(0, 0, cardW, cardH, 0xfff6e5, 1).setStrokeStyle(2, 0x5a4a3a);
-      const text = this.add.text(0, 0, item.left, { font: "18px Arial", color: "#5a4a3a" }).setOrigin(0.5);
+      const text = this.add.text(0, 0, item.left, { font: "16px Arial", color: "#5a4a3a" }).setOrigin(0.5);
       const container = this.add.container(leftX, y, [card, text]);
       container.setSize(cardW, cardH);
       container.setInteractive({ draggable: true });
