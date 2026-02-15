@@ -27,8 +27,8 @@ const ALL_QUESTIONS = [
   { q: "Lateral work is suggested for Suspension Bridge backs.", a: true }
 ];
 
-const QUESTIONS_PER_GAME = 12;
-const TIME_PER_QUESTION = 4; // seconds
+const QUESTIONS_PER_GAME = 8;
+const TIME_PER_QUESTION = 5; // seconds
 
 let questions = [];
 let current = 0;

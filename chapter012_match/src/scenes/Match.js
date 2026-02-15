@@ -20,7 +20,7 @@ class MatchScene extends Phaser.Scene {
       { left: "Halt", right: "Connection to the rider through stillness.", matched: "Halt -  Emotional neutrality before entering the ring. Ability to stay soft while adrenaline rises. Square stance showing balance and preparedness." },
       { left: "Walk", right: "Ability to decompress between warm-up efforts.", matched: "Walk - suppleness through the topline and shoulders. Willingness to stay connected without tension. Emotional recovery after big efforts" },
       { left: "Trot", right: "Willingness to stretch into contact.", matched: " Trot - Suppleness through the ribcage and shoulders. Evenness of rhythm before jumping. Emotional readiness for more power." },
-        { left: "Canter", right: "Power, lift, the gateway to flight.", matched: " Canter - Balance and adjustability before fences. Ability to lengthen and shorten without tension. Emotional confidence approaching questions. Precision in lead changes and turns" }
+        { left: "Canter", right: "Power, lift, the gateway to flight.", matched: " Canter - Balance and adjustability before fences. Ability to lengthen and shorten without tension. Emotional confidence approaching fences. Precision in lead changes and turns" }
       ];
 
 
@@ -32,8 +32,8 @@ class MatchScene extends Phaser.Scene {
     const leftX = this.sys.game.config.width * 0.10;
     const rightX = this.sys.game.config.width * 0.60;
     const cardW = 120, cardH = 80;
-    const rightW = 220;
-    const minRightH = 80; // minimum height for right cards
+    const rightW = 240;
+    const minRightH = 90; // minimum height for right cards
     const spacing = 20; // fixed spacing between right cards
     // Store containers for drag logic
     const leftContainers = [];

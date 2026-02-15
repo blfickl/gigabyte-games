@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merge Game</title>
+  <script src="../treat-match/phaser.js"></script>
+  <script src="src/main.js"></script>
+  <style>
+    body { margin: 0; background: #e6d3b3; }
+    #game-container { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="game-container"></div>
+  <div style="position: absolute; bottom: 24px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 10;">
+    <div style="display: flex; justify-content: center;">
+      <button id="arrow-up" style="width: 48px; height: 48px; margin: 4px; font-size: 24px;">▲</button>
+    </div>
+    <div style="display: flex; justify-content: center;">
+      <button id="arrow-left" style="width: 48px; height: 48px; margin: 4px; font-size: 24px;">◀</button>
+      <button id="arrow-down" style="width: 48px; height: 48px; margin: 4px; font-size: 24px;">▼</button>
+      <button id="arrow-right" style="width: 48px; height: 48px; margin: 4px; font-size: 24px;">▶</button>
+    </div>
+  </div>
+</body>
+</html>
