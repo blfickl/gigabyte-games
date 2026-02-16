@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horse Back Bridge Types - Multiple Choice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        #game-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #bbb;
+            padding: 24px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 18px;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .choice-btn {
+            padding: 12px;
+            border: 1px solid #388e3c;
+            border-radius: 6px;
+            background: #e8f5e9;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.2s;
+        }
+
+        .choice-btn:hover {
+            background: #c8e6c9;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 1.1em;
+        }
+
+        .correct {
+            color: #388e3c;
+        }
+
+        .incorrect {
+            color: #c62828;
+        }
+
+        .next-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background: #388e3c;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-container">
+        <div class="question" id="question"></div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" style="display:none">Next</button>
+    </div>
+    <script src="src/main.js"></script>
+</body>
+
+</html>

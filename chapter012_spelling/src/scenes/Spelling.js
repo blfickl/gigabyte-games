@@ -79,7 +79,7 @@ class Spelling extends Phaser.Scene {
             }
         ];
         Phaser.Utils.Array.Shuffle(allWords);
-        this.muscles = allWords.slice(0, 5);
+        this.muscles = allWords.slice(0, 3);
         this.current = 0;
         this.score = 0;
         this.guessedLetters = [];
@@ -124,7 +124,7 @@ class Spelling extends Phaser.Scene {
         this.promptText = this.add.text(this.scale.width/2, 180, this.muscles[this.current].prompt, { font: '20px Arial', color: '#333', wordWrap: { width: this.scale.width - 40 } }).setOrigin(0.5);
         this.promptText.setY(180);
         this.feedbackText = this.add.text(this.scale.width/2, 500, '', { font: '24px Arial', color: '#c62828' }).setOrigin(0.5);
-        this.stickHorseText = this.add.text(this.scale.width - 20, 40, '', { font: '24px Arial', color: '#c62828', align: 'right' }).setOrigin(1, 0);
+        // Removed error counter display
     }
 
     getMaskedWord() {
@@ -174,9 +174,7 @@ class Spelling extends Phaser.Scene {
         if (this.wordText) {
             this.wordText.setText(this.getMaskedWord());
         }
-        if (this.stickHorseText) {
-            this.stickHorseText.setText('Errors: ' + this.errors + ' / ' + this.maxErrors);
-        }
+        // Removed error counter update
         const answer = this.muscles[this.current].name;
         const masked = this.getMaskedWord();
         if (masked === answer) {
@@ -216,9 +214,7 @@ class Spelling extends Phaser.Scene {
             if (this.feedbackText) {
                 this.feedbackText.setText('');
             }
-            if (this.stickHorseText) {
-                this.stickHorseText.setText('Errors: 0 / ' + this.maxErrors);
-            }
+            // Removed error counter reset
         } else {
             if (this.wordText) {
                 this.wordText.setText('');
@@ -229,9 +225,7 @@ class Spelling extends Phaser.Scene {
             if (this.feedbackText) {
                 this.feedbackText.setText('');
             }
-            if (this.stickHorseText) {
-                this.stickHorseText.setText('');
-            }
+            // Removed error counter clear
             this.showEndPopup();
         }
     }
