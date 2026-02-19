@@ -6,9 +6,7 @@ class Spelling extends Phaser.Scene {
             const popupWidth = Math.min(440, this.scale.width-20);
             const popupY = 420;
             const popupBg = this.add.rectangle(this.scale.width/2, popupY, popupWidth, 220, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
-            // Placeholder for image
-            const imgBox = this.add.rectangle(this.scale.width/2, popupY - 60, 120, 80, 0xf0f0f0, 1).setStrokeStyle(2, 0xcccccc);
-            const imgText = this.add.text(this.scale.width/2, popupY - 60, 'Image\nPlaceholder', { font: '16px Arial', color: '#888', align: 'center' }).setOrigin(0.5);
+            // Image placeholder removed
             // Muscle name in bold at top
             const wordText = this.add.text(this.scale.width/2, popupY - 30, muscle.name, { font: 'bold 22px Arial', color: '#111', align: 'center' }).setOrigin(0.5);
             // Answer text (educational prompt)
@@ -26,8 +24,6 @@ class Spelling extends Phaser.Scene {
         closeBtn.on('pointerup', () => {
                 // Only close popup, do not advance word
                 popupBg.destroy();
-                imgBox.destroy();
-                imgText.destroy();
                 wordText.destroy();
                 answerText.destroy();
                 closeBtn.destroy();
@@ -47,16 +43,14 @@ class Spelling extends Phaser.Scene {
             const bullet = bullets[Math.floor(Math.random() * bullets.length)];
             // Popup background
             const popupBg = this.add.rectangle(this.scale.width/2, this.scale.height/2, Math.min(340, this.scale.width-40), 260, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
-            // Placeholder for image
-            const imgBox = this.add.rectangle(this.scale.width/2, this.scale.height/2 - 50, 120, 80, 0xf0f0f0, 1).setStrokeStyle(2, 0xcccccc);
-            const imgText = this.add.text(this.scale.width/2, this.scale.height/2 - 50, 'Image\nPlaceholder', { font: '16px Arial', color: '#888', align: 'center' }).setOrigin(0.5);
+            // Image placeholder removed
             // Bullet text
             const bulletText = this.add.text(this.scale.width/2, this.scale.height/2 + 30, bullet, { font: '18px Arial', color: '#222', wordWrap: { width: Math.min(320, this.scale.width-60) }, align: 'center' }).setOrigin(0.5);
             // Dismiss button
             const btn = this.add.rectangle(this.scale.width/2, this.scale.height/2 + 100, 100, 36, 0x00796b, 1).setInteractive();
             const btnText = this.add.text(this.scale.width/2, this.scale.height/2 + 100, 'Close', { font: '20px Arial', color: '#fff' }).setOrigin(0.5);
             btn.on('pointerdown', () => {
-                popupBg.destroy(); imgBox.destroy(); imgText.destroy(); bulletText.destroy(); btn.destroy(); btnText.destroy();
+                popupBg.destroy(); bulletText.destroy(); btn.destroy(); btnText.destroy();
             });
         }
     constructor() {
@@ -107,13 +101,23 @@ class Spelling extends Phaser.Scene {
         }
             // Debug text to show key events
         //    this.debugText = this.add.text(10, this.scale.height - 30, '', { font: '16px Arial', color: '#c62828' }).setOrigin(0, 1);
-        this.muscles = [
+        // Full muscle list
+        const allMuscles = [
             { name: 'Longissimus dorsi', prompt: "Primary mover, supports posture and propulsion", answer: "Can you feel the swing of the longissimus? ", pronunciations: ["long-iss-EE-mus DOR-sigh"] },
             { name: 'Multifidus', prompt: "Deep stabilizer, protects spine and aids coordination", answer: "Where does your horse's movement begin?", pronunciations: ["mul-TIF-i-dus"] },
             { name: 'Serratus ventralis', prompt: "Connects spine to shoulder, helps lift the back", answer: "A healthy back allows the horse to lift, swing, and carry with ease", pronunciations: ["ser-RAY-tus VEN-tral-is"] }, 
             { name: 'Iliocostalis', prompt: "Supports lateral movement and rib mobility" , answer: "Poor saddle fit or incorrect riding can cause pain or conditions like kissing spine", pronunciations: ["ill-ee-oh-COS-tal-is"]  },
             { name: 'Spinalis thoracis', prompt: "Assists in spinal extension and posture" , answer: "Understanding anatomy helps riders support the horse's movement, not block i", pronunciations: ["SPY-nal-is thor-ASS-is"] }
         ];
+        // Shuffle and pick three random muscles
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        this.muscles = shuffle([...allMuscles]).slice(0, 3);
         this.current = 0;
         this.score = 0;
         this.guessedLetters = [];
@@ -125,9 +129,10 @@ class Spelling extends Phaser.Scene {
         this.promptText = this.add.text(this.scale.width/2, 180, this.muscles[this.current].prompt, { font: '20px Arial', color: '#333', wordWrap: { width: this.scale.width - 40 } }).setOrigin(0.5);
         this.promptText.setY(180); // You can adjust this value (e.g., 160 or 150) if you want it even higher
    
-        this.feedbackText = this.add.text(this.scale.width/2, 320, '', { font: '24px Arial', color: '#c62828' }).setOrigin(0.5);
+        // Move feedback lower (e.g., below letter grid)
+        this.feedbackText = this.add.text(this.scale.width/2, 420, '', { font: '24px Arial', color: '#c62828' }).setOrigin(0.5);
 
-        this.stickHorseText = this.add.text(this.scale.width - 20, 40, '', { font: '24px Arial', color: '#c62828', align: 'right' }).setOrigin(1, 0);
+        // Removed stickHorseText (Errors message)
 
         // Remove keyboard input for mobile/tablet friendliness
     }
@@ -192,10 +197,7 @@ class Spelling extends Phaser.Scene {
         if (this.guessedText) {
             this.guessedText.setText('Guessed: ' + this.guessedLetters.join(', '));
         }
-        // Show stick horse (hangman) progress
-        if (this.stickHorseText) {
-            this.stickHorseText.setText('Errors: ' + this.errors + ' / ' + this.maxErrors);
-        }
+        // Removed stick horse (Errors message)
         // Check win/lose
         const answer = this.muscles[this.current].name;
         const masked = this.getMaskedWord();

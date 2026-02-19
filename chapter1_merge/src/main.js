@@ -121,11 +121,30 @@ class MergeGame extends Phaser.Scene {
             this.addRandomGreenShape();
             this.redraw();
             if (this.isGameOver()) {
-                setTimeout(() => {
-                    alert('Game Over! No more moves possible.');
-                }, 100);
+                this.showGameOverPopup();
             }
         }
+    }
+
+    showGameOverPopup() {
+        // Remove any existing popup
+        if (this.gameOverPopup) {
+            this.gameOverPopup.destroy();
+        }
+        const popupWidth = 300;
+        const popupHeight = 160;
+        const popupBg = this.add.rectangle(this.scale.width/2, this.scale.height/2, popupWidth, popupHeight, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
+        const text = this.add.text(this.scale.width/2, this.scale.height/2 - 30, 'Game Over!\nNo more moves possible.', { font: '22px Arial', color: '#222', align: 'center' }).setOrigin(0.5);
+        const btn = this.add.rectangle(this.scale.width/2, this.scale.height/2 + 40, 120, 40, 0x00796b, 1).setInteractive();
+        const btnText = this.add.text(this.scale.width/2, this.scale.height/2 + 40, 'Play Again', { font: '20px Arial', color: '#fff' }).setOrigin(0.5);
+        btn.on('pointerdown', () => {
+            popupBg.destroy();
+            text.destroy();
+            btn.destroy();
+            btnText.destroy();
+            this.scene.restart();
+        });
+        this.gameOverPopup = popupBg;
     }
 
     isGameOver() {
