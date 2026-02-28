@@ -8,9 +8,9 @@ class Spelling extends Phaser.Scene {
             const popupBg = this.add.rectangle(this.scale.width/2, popupY, popupWidth, 220, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
             // Image placeholder removed
             // Muscle name in bold at top
-            const wordText = this.add.text(this.scale.width/2, popupY - 30, muscle.name, { font: 'bold 22px Arial', color: '#111', align: 'center' }).setOrigin(0.5);
+            const wordText = this.add.text(this.scale.width/2, popupY - 40, muscle.name, { font: 'bold 18px Arial', color: '#111', align: 'center' }).setOrigin(0.5);
             // Answer text (educational prompt)
-            const answerText = this.add.text(this.scale.width/2, popupY, muscle.answer, { font: '18px Arial', color: '#222', wordWrap: { width: popupWidth - 40 }, align: 'center' }).setOrigin(0.5);
+            const answerText = this.add.text(this.scale.width/2, popupY, muscle.answer, { font: '15px Arial', color: '#222', wordWrap: { width: popupWidth - 40 }, align: 'center' }).setOrigin(0.5);
             // Pronunciation text (if available)
             let pronTextObj = null;
             if (muscle.pronunciations && muscle.pronunciations.length > 0) {
@@ -45,7 +45,7 @@ class Spelling extends Phaser.Scene {
             const popupBg = this.add.rectangle(this.scale.width/2, this.scale.height/2, Math.min(340, this.scale.width-40), 260, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
             // Image placeholder removed
             // Bullet text
-            const bulletText = this.add.text(this.scale.width/2, this.scale.height/2 + 30, bullet, { font: '18px Arial', color: '#222', wordWrap: { width: Math.min(320, this.scale.width-60) }, align: 'center' }).setOrigin(0.5);
+            const bulletText = this.add.text(this.scale.width/2, this.scale.height/2 + 30, bullet, { font: '12px Arial', color: '#222', wordWrap: { width: Math.min(320, this.scale.width-60) }, align: 'center' }).setOrigin(0.5);
             // Dismiss button
             const btn = this.add.rectangle(this.scale.width/2, this.scale.height/2 + 100, 100, 36, 0x00796b, 1).setInteractive();
             const btnText = this.add.text(this.scale.width/2, this.scale.height/2 + 100, 'Close', { font: '20px Arial', color: '#fff' }).setOrigin(0.5);

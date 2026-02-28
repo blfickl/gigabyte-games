@@ -97,7 +97,7 @@ class Memory extends Phaser.Scene {
         const popupY = this.scale.height / 2;
         const popupBg = this.add.rectangle(popupX, popupY, popupWidth, popupHeight, 0xffffff, 0.98).setStrokeStyle(3, 0x00796b);
         // Congratulation text
-        const congratsText = this.add.text(popupX, popupY - 110, 'Congratulations! You matched all pairs!', { font: '20px Arial', color: '#388e3c', align: 'center', wordWrap: { width: popupWidth - 40 } }).setOrigin(0.5);
+        const congratsText = this.add.text(popupX, popupY - 110, 'Congratulations! You matched all pairs!', { font: '15px Arial', color: '#388e3c', align: 'center', wordWrap: { width: popupWidth - 40 } }).setOrigin(0.5);
         // Bullet points
         const bullets = [
             'Back: Supports posture and movement',
@@ -108,7 +108,7 @@ class Memory extends Phaser.Scene {
         ];
         let bulletY = popupY - 60;
         for (let i = 0; i < bullets.length; i++) {
-            this.add.text(popupX - popupWidth / 2 + 40, bulletY + i * 36, '• ' + bullets[i], { font: '15px Arial', color: '#222', wordWrap: { width: popupWidth - 80 } }).setOrigin(0, 0.5);
+            this.add.text(popupX - popupWidth / 2 + 40, bulletY + i * 36, '• ' + bullets[i], { font: '12px Arial', color: '#222', wordWrap: { width: popupWidth - 80 } }).setOrigin(0, 0.5);
         }
         // Close button
         const closeBtn = this.add.text(popupX, popupY + popupHeight / 2 - 30, '✕', { font: '28px Arial', color: '#c62828', backgroundColor: '#fff' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1000);
