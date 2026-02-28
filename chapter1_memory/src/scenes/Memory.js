@@ -108,7 +108,7 @@ class Memory extends Phaser.Scene {
         ];
         let bulletY = popupY - 60;
         for (let i = 0; i < bullets.length; i++) {
-            this.add.text(popupX - popupWidth / 2 + 40, bulletY + i * 36, '• ' + bullets[i], { font: '12px Arial', color: '#222', wordWrap: { width: popupWidth - 80 } }).setOrigin(0, 0.5);
+            this.add.text(popupX - popupWidth / 2 + 40, bulletY + i * 36, '• ' + bullets[i], { font: '12px Courier', color: '#222', wordWrap: { width: popupWidth - 80 } }).setOrigin(0, 0.5);
         }
         // Close button
         const closeBtn = this.add.text(popupX, popupY + popupHeight / 2 - 30, '✕', { font: '28px Arial', color: '#c62828', backgroundColor: '#fff' }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(1000);

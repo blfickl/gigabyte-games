@@ -27,10 +27,10 @@ class MatchScene extends Phaser.Scene {
     // Shuffle cards
     const shuffled = Phaser.Utils.Array ? Phaser.Utils.Array.Shuffle([...cards]) : cards.sort(() => Math.random() - 0.5);
     // Layout
-    const leftX = this.sys.game.config.width * 0.10;
-    const rightX = this.sys.game.config.width * 0.60;
+    const leftX = this.sys.game.config.width * 0.20;
+    const rightX = this.sys.game.config.width * 0.65;
     const cardW = 120, cardH = 80;
-    const rightW = 220, rightH = 140;
+    const rightW = 225, rightH = 140;
     const spacing = this.sys.game.config.height * 0.13;
     // Store containers for drag logic
     const leftContainers = [];
@@ -40,7 +40,7 @@ class MatchScene extends Phaser.Scene {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
       // #fff6e5 (creamy white) for before dropped
       const card = this.add.rectangle(0, 0, cardW, cardH, 0xfff6e5, 1).setStrokeStyle(2, 0x1976d2);
-      const text = this.add.text(0, 0, item.left, { font: "20px Arial", color: "#5a4a3a" }).setOrigin(0.5);
+      const text = this.add.text(0, 0, item.left, { font: "18px Arial", color: "#5a4a3a" }).setOrigin(0.5);
       const container = this.add.container(leftX, y, [card, text]);
       container.setSize(cardW, cardH);
       container.setInteractive({ draggable: true });
@@ -55,7 +55,7 @@ class MatchScene extends Phaser.Scene {
       const y = this.sys.game.config.height * 0.18 + i * spacing;
       // #fff6e5 (creamy white) for before dropped
       const card = this.add.rectangle(0, 0, rightW, rightH, 0xfff6e5, 1).setStrokeStyle(2, 0x5a4a3a);
-      const text = this.add.text(0, 0, item.right, { font: "18px Arial", color: "#5a4a3a", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
+      const text = this.add.text(0, 0, item.right, { font: "15px Arial", color: "#5a4a3a", wordWrap: { width: rightW - 24 } }).setOrigin(0.5);
       const container = this.add.container(rightX, y, [card, text]);
       container.setSize(rightW, rightH);
       container.setInteractive({ dropZone: true });

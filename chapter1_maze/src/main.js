@@ -3,7 +3,7 @@ const config = {
   parent: 'game-container',
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: '#f0f8ff',
+  backgroundColor: '#e8d5bb',
   scene: [window.MazeScene],
   scale: {
     mode: Phaser.Scale.RESIZE,

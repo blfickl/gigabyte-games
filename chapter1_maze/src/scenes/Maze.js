@@ -6,11 +6,11 @@ class MazeScene extends Phaser.Scene {
   preload() {
     // Preload assets here (icons, player, etc.)
     // Use spaceship.png as horse icon placeholder
-    this.load.image('horse', '../../treat-match/assets/spaceship.png');
+    this.load.image('horse', '../../assets/images/ask-gig.png');
   }
 
   create() {
-    this.cameras.main.setBackgroundColor('#f0f8ff');
+    this.cameras.main.setBackgroundColor('#e8d5bb');
     this.createMaze();
     this.createPlayer();
     this.createUI();
@@ -19,16 +19,23 @@ class MazeScene extends Phaser.Scene {
     // Show instructions at the start
     this.time.delayedCall(300, () => {
       this.showPopup(
-        'Welcome!\n\nCollect all nutrition circles to boost your horse\'s topline score.\n\nAvoid red hazards – they reduce your score!\n\nUse arrow keys or swipe to move.'
+        '!\n\nCollect all nutrition circles to boost your horse\'s topline score.\n\nAvoid red hazards – they reduce your score!\n\nUse arrow keys or swipe to move.'
       );
     });
+      // Force popup closed at start
+      this.popupBg.setVisible(false);
+      this.popupText.setVisible(false);
+      this.popupActive = false;
+    
+  
   }
 
   createMaze() {
     // Draw a simple maze grid (6 rows x 6 cols)
     this.mazeRows = 6;
     this.mazeCols = 6;
-    this.cellSize = Math.floor(Math.min(this.sys.game.config.width, this.sys.game.config.height) / Math.max(this.mazeRows, this.mazeCols));
+    // Add margin by subtracting 60px from available width/height
+    this.cellSize = Math.floor((Math.min(this.sys.game.config.width, this.sys.game.config.height) - 60) / Math.max(this.mazeRows, this.mazeCols));
     this.mazeOriginX = Math.floor((this.sys.game.config.width - this.cellSize * this.mazeCols) / 2);
     this.mazeOriginY = Math.floor((this.sys.game.config.height - this.cellSize * this.mazeRows) / 2);
 
@@ -134,11 +141,11 @@ class MazeScene extends Phaser.Scene {
         const x = this.mazeOriginX + col * this.cellSize;
         const y = this.mazeOriginY + row * this.cellSize;
         if (this.maze[row][col] === 1) {
-          // Wall
-          this.add.rectangle(x + this.cellSize / 2, y + this.cellSize / 2, this.cellSize - 4, this.cellSize - 4, 0x222288).setDepth(1);
+          // Wall (reduce width for thinner columns)
+          this.add.rectangle(x + this.cellSize / 2, y + this.cellSize / 2, this.cellSize - 8, this.cellSize - 8, 0x687076).setDepth(1);
         } else {
           // Path (optional: draw faint background)
-          this.add.rectangle(x + this.cellSize / 2, y + this.cellSize / 2, this.cellSize - 4, this.cellSize - 4, 0xffffff, 0.07).setDepth(0);
+          this.add.rectangle(x + this.cellSize / 2, y + this.cellSize / 2, this.cellSize - 8, this.cellSize - 8, 0xffffff, 0.07).setDepth(0);
         }
       }
     }
@@ -163,9 +170,9 @@ class MazeScene extends Phaser.Scene {
     const px = this.mazeOriginX + this.playerCol * this.cellSize + this.cellSize/2;
     const py = this.mazeOriginY + this.playerRow * this.cellSize + this.cellSize/2;
     // Main circle
-    this.player = this.add.circle(px, py, this.cellSize*0.3, 0x1976d2).setDepth(2);
+    this.player = this.add.circle(px, py, this.cellSize*0.3, 0x1976d2).setOrigin(0.5).setDepth(2);
     // Horse icon (centered on circle)
-    this.playerHorse = this.add.image(px, py, 'horse').setDisplaySize(this.cellSize*0.32, this.cellSize*0.32).setDepth(3);
+    this.playerHorse = this.add.image(px, py, 'horse').setOrigin(0.5).setDisplaySize(this.cellSize*0.45, this.cellSize*0.54).setDepth(3);
     // START label under the circle
     this.playerStartText = this.add.text(px, py + this.cellSize*0.32, 'START', { font: '18px Arial', color: '#1976d2', fontStyle: 'bold', align: 'center' }).setOrigin(0.5, 0).setDepth(4);
   }
@@ -176,7 +183,7 @@ class MazeScene extends Phaser.Scene {
     this.maxScore = 5;
     this.scoreText = this.add.text(this.sys.game.config.width/2, 10, 'Topline Score: 0/5', {
       font: '18px Arial',
-      color: '#1976d2',
+      color: '#687076',
       fontStyle: 'bold',
       align: 'center',
       backgroundColor: '#fff',
@@ -185,12 +192,12 @@ class MazeScene extends Phaser.Scene {
 
     // Popup container (hidden by default)
     this.popupBg = this.add.rectangle(this.sys.game.config.width/2, this.sys.game.config.height/2, Math.min(this.sys.game.config.width*0.8, 320), 120, 0xffffff, 0.98)
-      .setStrokeStyle(3, 0x1976d2)
+      .setStrokeStyle(3, 0x687076)
       .setDepth(20)
       .setVisible(false);
     this.popupText = this.add.text(this.sys.game.config.width/2, this.sys.game.config.height/2, '', {
       font: '16px Arial',
-      color: '#1976d2',
+      color: '#687076',
       align: 'center',
       wordWrap: { width: Math.min(this.sys.game.config.width*0.7, 280) }
     }).setOrigin(0.5).setDepth(21).setVisible(false);
@@ -247,11 +254,19 @@ class MazeScene extends Phaser.Scene {
         duration: 120,
         ease: 'Sine.easeInOut'
       });
-      // Move horse icon and START text
+      // Move horse icon (image) centered on circle
       this.tweens.add({
-        targets: [this.playerHorse, this.playerStartText],
+        targets: this.playerHorse,
         x: px,
-        y: [py, py + this.cellSize*0.32],
+        y: py,
+        duration: 120,
+        ease: 'Sine.easeInOut'
+      });
+      // Move START text separately
+      this.tweens.add({
+        targets: this.playerStartText,
+        x: px,
+        y: py + this.cellSize*0.32,
         duration: 120,
         ease: 'Sine.easeInOut'
       });
@@ -284,7 +299,11 @@ class MazeScene extends Phaser.Scene {
 
 
   showPopup(text) {
-    if (this.popupActive) return;
+    // Always close any existing popup before showing a new one
+    this.popupBg.setVisible(false);
+    this.popupText.setVisible(false);
+    this.popupActive = false;
+
     this.popupActive = true;
     // Detect hazard popups by message content
     const isHazard = text.toLowerCase().includes('hazard') || text.toLowerCase().includes('fat token') || text.toLowerCase().includes('over-supplement') || text.toLowerCase().includes('underfeeding');
@@ -298,10 +317,19 @@ class MazeScene extends Phaser.Scene {
     }
     this.popupBg.setVisible(true);
     this.popupText.setText(text).setVisible(true);
-    // Dismiss on tap
-    this.input.once('pointerdown', () => {
+
+    // Add close 'X' button in top right of popup
+    const popupWidth = this.popupBg.width || Math.min(this.sys.game.config.width*0.8, 320);
+    const popupX = this.sys.game.config.width/2 + popupWidth/2 - 20;
+    const popupY = this.sys.game.config.height/2 - (this.popupBg.height || 120)/2 + 20;
+    const closeBtn = this.add.text(popupX, popupY, '✕', { font: '28px Arial', color: '#272424', backgroundColor: '#fff' })
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .setDepth(1000);
+    closeBtn.on('pointerup', () => {
       this.popupBg.setVisible(false);
       this.popupText.setVisible(false);
+      closeBtn.destroy();
       this.popupActive = false;
     });
   }
