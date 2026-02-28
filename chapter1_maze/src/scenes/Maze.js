@@ -78,7 +78,7 @@ class MazeScene extends Phaser.Scene {
       else if (cell.type === 'supplement') label = 'Supplement';
       else if (cell.type === 'slowfeeder') label = 'Slow Feeder';
       this.add.text(px, py + this.cellSize*0.24, label, {
-        font: '15px Arial',
+        font: '12px Arial',
         color: Phaser.Display.Color.IntegerToColor(typeObj.color).rgba,
         fontStyle: 'bold',
         align: 'center',
@@ -172,7 +172,7 @@ class MazeScene extends Phaser.Scene {
     // Main circle
     this.player = this.add.circle(px, py, this.cellSize*0.3, 0x1976d2).setOrigin(0.5).setDepth(2);
     // Horse icon (centered on circle)
-    this.playerHorse = this.add.image(px, py, 'horse').setOrigin(0.5).setDisplaySize(this.cellSize*0.45, this.cellSize*0.54).setDepth(3);
+   // this.playerHorse = this.add.image(px, py, 'horse').setOrigin(0.5).setDisplaySize(this.cellSize*0.45, this.cellSize*0.54).setDepth(3);
     // START label under the circle
     this.playerStartText = this.add.text(px, py + this.cellSize*0.32, 'START', { font: '18px Arial', color: '#1976d2', fontStyle: 'bold', align: 'center' }).setOrigin(0.5, 0).setDepth(4);
   }
