@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
     <style>
         body { margin: 0; background: #222; color: #fff; font-family: sans-serif; }
-        #game-container { margin: 20px auto; display: block; width: 420px; }
+        #game-container { margin: 20px auto; display: block; width: 500px; }
         .custom-modal {
             display: none;
             position: fixed;
@@ -46,7 +46,15 @@
 </head>
 <body>
     <h2 style="text-align:center;">Bridging The Back</h2>
-    <div id="game-container"></div>
+    <div id="game-container">
+
+<div style="width:500px; margin: 0 auto;">
+    <img src="https://gigabytecontent.blob.core.windows.net/events/gig-feature2.png"
+        style="width:100%; height:180px; display:block; object-fit:cover;" alt="Feature image">
+</div>
+
+    </div>
+ 
     <!-- Custom Modal Alert -->
     <div id="customModal" class="custom-modal">
         <div class="custom-modal-content">
@@ -145,7 +153,7 @@
             const cellSize = 35;
             for (let y = 0; y < gridSize; y++) {
                 for (let x = 0; x < gridSize; x++) {
-                    let cell = scene.add.text(20 + x * cellSize, 20 + y * cellSize, grid[y][x], {
+                    let cell = scene.add.text(75 + x * cellSize, 20 + y * cellSize, grid[y][x], {
                         font: '28px monospace',
                         color: '#fff',
                         backgroundColor: '#444',
@@ -171,7 +179,7 @@
                 const rowWords = words.slice(startIdx, endIdx).join(', ');
                 // Add the text, then center it based on its width
                 const textObj = scene.add.text(
-                    20 + (gridWidthPx / 2),
+                    75 + (gridWidthPx / 2),
                     20 + gridSize * cellSize + 20 + row * 32,
                     rowWords,
                     { font: '20px monospace', color: '#ff0' }
