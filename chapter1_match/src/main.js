@@ -7,7 +7,7 @@ const config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
-    backgroundColor: "#f0f8ff",
+    backgroundColor: "#e6d3b3",
  // backgroundColor: "#da7f91",
   parent: 'game-container',
   scene: [window.MatchScene],
