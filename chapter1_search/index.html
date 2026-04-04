@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
     <style>
         body { margin: 0; background: #222; color: #fff; font-family: sans-serif; }
-        #game-container { margin: 8px auto; display: block; width: 420px; }
+        #game-container { margin: 2px auto; display: block; width: fit-content; }
         .custom-modal {
             display: none;
             position: fixed;
@@ -140,9 +140,13 @@
         const config = {
             type: Phaser.AUTO,
             width: 420,
-            height: 600,
+            height: 460,
             backgroundColor: '#333',
             parent: 'game-container',
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+            },
             scene: {
                 create: create
             }
